@@ -9,6 +9,7 @@
 #define PMR_ZONE_H_
 
 #include <vector>
+#include "pmr_point.h"
 #include "pmr_edge.h"
 /* Zone **********************************************************************/
 
@@ -25,13 +26,13 @@ struct Zone
 };
 
 
-Zone* zone_new(int id, std::vector<Node>& points_list);
+Zone* zone_new(int id, std::vector<Point>& points_list);
 
 
 void zone_free(Zone* self);
 
 
-void zone_update(Zone* self, std::vector<Node>& points_list);
+void zone_update(Zone* self, std::vector<Point>& points_list);
 
 
 int zone_is_internal_edge(Zone* self, Edge* edge);

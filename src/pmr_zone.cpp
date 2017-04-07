@@ -19,9 +19,9 @@ class RuntimeErrorBadCountInZoneUpdate: public std::exception
 } badCount;
 
 
-Zone* zone_new(int id, std::vector<Node>& points_list)
+Zone* zone_new(int id, std::vector<Point>& points_list)
 {
-    std::vector<Node>::iterator it;
+    std::vector<Point>::iterator it;
     Zone* self = new Zone;
     std::size_t size = points_list.size();
     self->nodes = new Node*[size];
@@ -48,11 +48,11 @@ void zone_free(Zone* self)
 }
 
 
-void zone_update(Zone* self, std::vector<Node>& points_list)
+void zone_update(Zone* self, std::vector<Point>& points_list)
 {
     unsigned int i = 0;
     unsigned int points_count = (unsigned int) points_list.size();
-    std::vector<Node>::iterator it;
+    std::vector<Point>::iterator it;
 
     if (points_count != self->nodes_count) {
         throw badCount;

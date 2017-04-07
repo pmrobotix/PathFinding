@@ -84,7 +84,7 @@ void pathfinder_dealloc(PathFinder* self)
 }
 
 
-int pathfinder_add_zone(PathFinder* self, std::vector<Node>& points_list)
+int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_list)
 {
     unsigned int i = 0;
 
@@ -132,7 +132,7 @@ void pathfinder_move_zone(PathFinder* self, int zone_id, float dx, float dy)
 }
 
 
-void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, std::vector<Node>& points_list)
+void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, std::vector<Point>& points_list)
 {
 
     self->is_synchronized = 0;
