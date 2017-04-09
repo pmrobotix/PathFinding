@@ -11,6 +11,7 @@
 #include "pmr_point.h"
 #include "pmr_node.h"
 #include "pmr_edge.h"
+#include "pmr_zone.h"
 #include "pmr_path_result.h"
 
 /* Pathfinder methods ********************************************************/
