@@ -25,11 +25,12 @@ public:
     PlaygroundObjectID teammate = INVALID;
     PlaygroundObjectID opponent_1 = INVALID;
     PlaygroundObjectID opponent_2 = INVALID;
-    Playground();
+    Playground(float field_x1, float field_y1, float field_x2, float field_y2,
+            float zone_escape_increment, float zone_escape_max_increment);
     virtual ~Playground();
 
-    virtual Playground* add_circle(float x, float y, float radius, float angle, unsigned int num_segments);
-    virtual Playground* add_circle(PlaygroundObjectID& id, float x, float y, float radius, float angle, unsigned int num_segments);
+    virtual Playground* add_circle(float x, float y, float radius, unsigned int num_segments);
+    virtual Playground* add_circle(PlaygroundObjectID& id, float x, float y, float radius, unsigned int num_segments);
     virtual Playground* add_quarter_circle(float x, float y, float radius, float angle, unsigned int num_segments);
     virtual Playground* add_quarter_circle(PlaygroundObjectID& id, float x, float y, float radius, float angle, unsigned int num_segments);
     virtual Playground* add_half_circle(float x, float y, float radius, float angle, unsigned int num_segments);
