@@ -48,11 +48,11 @@ void zone_free(Zone* self)
 }
 
 
-void zone_update(Zone* self, std::vector<Point>& points_list)
+void zone_update(Zone* self, const std::vector<Point>& points_list)
 {
     unsigned int i = 0;
     unsigned int points_count = (unsigned int) points_list.size();
-    std::vector<Point>::iterator it;
+    std::vector<Point>::const_iterator it;
 
     if (points_count != self->nodes_count) {
         throw badCount;
@@ -142,4 +142,28 @@ void zone_get_center(Zone* self, float* x, float* y)
     }
     *x /= self->nodes_count;
     *y /= self->nodes_count;
+}
+
+
+bool zone_is_enabled(Zone * self)
+{
+    return self->is_enabled;
+}
+
+
+bool zone_is_detected(Zone * self)
+{
+    return self->is_detected;
+}
+
+
+void zone_set_is_enabled(Zone * self, bool is_enabled)
+{
+    self->is_enabled = is_enabled;
+}
+
+
+void zone_set_is_detected(Zone * self, bool is_detected)
+{
+    self->is_detected = is_detected;
 }

@@ -39,16 +39,31 @@ int pathfinder_init(PathFinder* self, float field_x1, float field_y1, float fiel
 void pathfinder_dealloc(PathFinder* self);
 
 
-int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_list);
+unsigned int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_list);
 
 
-void pathfinder_enable_zone(PathFinder* self, int zone_id, int enabled);
+void pathfinder_enable_zone(PathFinder* self, unsigned int zone_id, int enabled);
 
 
-void pathfinder_move_zone(PathFinder* self, int zone_id, float dx, float dy);
+void pathfinder_set_is_enabled_zone(PathFinder* self, unsigned int zone_id, bool is_enabled);
 
 
-void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, std::vector<Point>& points_list);
+void pathfinder_set_is_detected_zone(PathFinder* self, unsigned int zone_id, bool is_detected);
+
+
+bool pathfinder_is_enabled_zone(PathFinder* self, unsigned int zone_id);
+
+
+bool pathfinder_is_detected_zone(PathFinder* self, unsigned int zone_id);
+
+
+void pathfinder_move_zone(PathFinder* self, unsigned int zone_id, float dx, float dy);
+
+
+void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, const std::vector<Point>& points_list);
+
+
+std::vector<Point> * pathfinder_get_zone(PathFinder* self, unsigned int zone_id);
 
 
 std::vector<Edge*>* pathfinder_get_edges(PathFinder* self);

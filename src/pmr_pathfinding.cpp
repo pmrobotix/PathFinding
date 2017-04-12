@@ -84,7 +84,7 @@ void pathfinder_dealloc(PathFinder* self)
 }
 
 
-int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_list)
+unsigned int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_list)
 {
     unsigned int i = 0;
 
@@ -107,23 +107,57 @@ int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_list)
 }
 
 
-void pathfinder_enable_zone(PathFinder* self, int zone_id, int enabled)
+void pathfinder_enable_zone(PathFinder* self, unsigned int zone_id, int enabled)
 {
 
     self->is_synchronized = 0;
 
-    if (zone_id >= 0 && zone_id < (int) (self->zones.size())) {
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
         self->zones[(size_t)zone_id]->enabled = enabled;
     }
 
 }
 
 
-void pathfinder_move_zone(PathFinder* self, int zone_id, float dx, float dy)
+void pathfinder_set_is_enabled_zone(PathFinder* self, unsigned int zone_id, bool is_enabled)
+{
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
+        zone_set_is_enabled(self->zones[(size_t)zone_id], is_enabled);
+    }
+}
+
+
+void pathfinder_set_is_detected_zone(PathFinder* self, unsigned int zone_id, bool is_detected)
+{
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
+        zone_set_is_detected(self->zones[(size_t)zone_id], is_detected);
+    }
+}
+
+
+bool pathfinder_is_enabled_zone(PathFinder* self, unsigned int zone_id)
+{
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
+        return zone_is_enabled(self->zones[(size_t)zone_id]);
+    }
+    return false;
+}
+
+
+bool pathfinder_is_detected_zone(PathFinder* self, unsigned int zone_id)
+{
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
+        return zone_is_detected(self->zones[(size_t)zone_id]);
+    }
+    return false;
+}
+
+
+void pathfinder_move_zone(PathFinder* self, unsigned int zone_id, float dx, float dy)
 {
     self->is_synchronized = 0;
 
-    if (zone_id >= 0 && zone_id < (int) (self->zones.size())) {
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
         Zone* zone = self->zones[(size_t) zone_id];
         zone->dx += dx;
         zone->dy += dy;
@@ -132,7 +166,7 @@ void pathfinder_move_zone(PathFinder* self, int zone_id, float dx, float dy)
 }
 
 
-void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, std::vector<Point>& points_list)
+void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, const std::vector<Point>& points_list)
 {
 
     self->is_synchronized = 0;
@@ -142,6 +176,24 @@ void pathfinder_update_zone(PathFinder* self, unsigned int zone_id, std::vector<
         return zone_update(zone, points_list);
     }
 
+}
+
+
+std::vector<Point> * pathfinder_get_zone(PathFinder* self, unsigned int zone_id)
+{
+    if (zone_id >= 0 && zone_id < (size_t)(self->zones.size())) {
+        Zone* zone = self->zones[zone_id];
+        unsigned int size = zone->nodes_count;
+        std::vector<Point> * result = new std::vector<Point>(size);
+        for (unsigned int i; i < size; i++) {
+            Point p;
+            p.x = zone->nodes[i]->x;
+            p.y = zone->nodes[i]->y;
+            result->push_back(p);
+        }
+        return result;
+    }
+    return NULL;
 }
 
 

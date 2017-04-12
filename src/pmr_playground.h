@@ -12,6 +12,7 @@
 #include <memory>
 #include <vector>
 #include "pmr_point.h"
+#include "pmr_path_result.h"
 
 typedef unsigned int PlaygroundObjectID;
 
@@ -20,7 +21,7 @@ private:
     class PlaygroundImpl;
     std::unique_ptr<PlaygroundImpl> playground_impl;
 public:
-    const PlaygroundObjectID INVALID = UINT_MAX;
+    static const PlaygroundObjectID INVALID = UINT_MAX;
     PlaygroundObjectID this_robot = INVALID;
     PlaygroundObjectID teammate = INVALID;
     PlaygroundObjectID opponent_1 = INVALID;
@@ -43,13 +44,13 @@ public:
     virtual Playground* add_convex_body(PlaygroundObjectID& id, float x, float y, const std::vector<Point*>& relative_points, float angle);
 
     virtual Playground* move(PlaygroundObjectID id, float dx, float dy);
-    virtual Playground* rotate(PlaygroundObjectID id, float angle);
-    virtual Playground* change_shape(PlaygroundObjectID id, const std::vector<Point*>& points);
-    virtual Playground* get_shape(std::vector<Point*>& points, PlaygroundObjectID id);
+    virtual Playground* change_shape(PlaygroundObjectID id, const std::vector<Point>& points);
+    virtual Playground* get_shape(std::vector<Point> * & points, PlaygroundObjectID id);
 
-    virtual Playground* enable(PlaygroundObjectID id, bool enabled);
+    virtual Playground* enable(PlaygroundObjectID id, bool is_enabled);
+    virtual Playground* detect(PlaygroundObjectID id, bool is_detected);
     virtual Playground* compute_edges();
-    virtual Playground* evaluate_path(const Point& start, const Point& end);
+    virtual Playground* find_path(FoundPath * & path, const Point& start, const Point& end);
 };
 
 #endif /* PMR_PLAYGROUND_H_ */

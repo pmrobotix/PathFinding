@@ -13,6 +13,7 @@ class Playground::PlaygroundImpl {
 public:
     static constexpr float PI = 3.1415927;
     PathFinder * my_playground;
+    void enable(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled);
 };
 
 Playground::Playground(float field_x1, float field_y1, float field_x2, float field_y2,
@@ -175,10 +176,9 @@ Playground* Playground::add_convex_body(PlaygroundObjectID& id, float x, float y
     float sin_a = sin(angle);
     std::vector<Point> points_list = std::vector<Point>(relative_points.size());
     Point p;
-    std::vector<Point*>::iterator points_it;
-    Point * relative_point;
+    std::vector<Point*>::const_iterator points_it;
     for (points_it = relative_points.begin(); points_it < relative_points.end(); points_it++) {
-        relative_point = &points_it;
+        const Point * relative_point = *points_it;
         p.x = x + relative_point->x * cos_a - relative_point->y * sin_a;
         p.y = y + relative_point->x * sin_a + relative_point->y * cos_a;
         points_list.push_back(p);
@@ -191,53 +191,64 @@ Playground* Playground::add_convex_body(PlaygroundObjectID& id, float x, float y
 
 Playground* Playground::move(PlaygroundObjectID id, float dx, float dy)
 {
-//    self.pathfinder.move_zone(id, dx, dy)
+    pathfinder_move_zone(playground_impl->my_playground, id, dx, dy);
     return this;
 }
 
 
-Playground* Playground::rotate(PlaygroundObjectID id, float angle)
+Playground* Playground::change_shape(PlaygroundObjectID id, const std::vector<Point>& points)
 {
+    pathfinder_update_zone(playground_impl->my_playground, id, points);
     return this;
 }
 
 
-Playground* Playground::change_shape(PlaygroundObjectID id, const std::vector<Point*>& points)
+Playground* Playground::get_shape(std::vector<Point> * & points, PlaygroundObjectID id)
 {
-//    self.pathfinder.update_zone(zone.id, coords)
-//    if IS_HOST_DEVICE_PC:
-//        flattened_coords = list(itertools.chain.from_iterable(coords))
-//        self.event_loop.send_packet(packets.SimulatorAddGraphMapZone(id = zone.id, points = flattened_coords))
+    points = pathfinder_get_zone(playground_impl->my_playground, id);
     return this;
 }
 
 
-Playground* Playground::get_shape(std::vector<Point*>& points, PlaygroundObjectID id)
+Playground* Playground::enable(PlaygroundObjectID id, bool is_enabled)
 {
+    pathfinder_set_is_enabled_zone(playground_impl->my_playground, id, is_enabled);
     return this;
 }
 
 
-
-
-Playground* Playground::enable(PlaygroundObjectID id, bool enabled)
+Playground* Playground::detect(PlaygroundObjectID id, bool is_detected)
 {
-//    if IS_HOST_DEVICE_PC:
-//        self.event_loop.send_packet(packets.SimulatorEnableGraphMapZone(id = zone.id, enabled = enabled))
-//    self.pathfinder.enable_zone(zone.id, enabled)
-//    zone.is_enabled = enabled
+    pathfinder_set_is_detected_zone(playground_impl->my_playground, id, is_detected);
     return this;
 }
-
 
 Playground* Playground::compute_edges()
 {
+    pathfinder_field_config_done(playground_impl->my_playground);
     return this;
 }
 
 
-Playground* Playground::evaluate_path(const Point& start, const Point& end)
+void Playground::PlaygroundImpl::enable(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled)
 {
+    if (teammate != Playground::INVALID && pathfinder_is_detected_zone(my_playground, teammate) && pathfinder_is_enabled_zone(my_playground, teammate)) {
+        pathfinder_enable_zone(my_playground, teammate, enabled);
+    }
+    if (opponent_1 != Playground::INVALID && pathfinder_is_detected_zone(my_playground, opponent_1) && pathfinder_is_enabled_zone(my_playground, opponent_1)) {
+        pathfinder_enable_zone(my_playground, opponent_1, enabled);
+    }
+    if (opponent_2 != Playground::INVALID && pathfinder_is_detected_zone(my_playground, opponent_2) && pathfinder_is_enabled_zone(my_playground, opponent_2)) {
+        pathfinder_enable_zone(my_playground, opponent_2, enabled);
+    }
+}
+
+
+Playground* Playground::find_path(FoundPath * & path, const Point& start, const Point& end)
+{
+    playground_impl->enable(teammate, opponent_1, opponent_2, 1);
+    path = pathfinder_find_path(playground_impl->my_playground, start.x, start.y, end.x, end.y);
+    playground_impl->enable(teammate, opponent_1, opponent_2, 0);
 //    logger.log("Compute route from ({}, {}) to ({}, {})".format(start.x, start.y, end.x, end.y))
 //    start_date = datetime.datetime.now()
 //    (cost, path) = self.pathfinder.find_path(start.x, start.y, end.x, end.y)
@@ -247,23 +258,6 @@ Playground* Playground::evaluate_path(const Point& start, const Point& end)
 //        return None, []
 //    else:
 //        logger.log("Route computed. Cost: {}. computation time: {}".format(cost, delta.total_seconds()))
-//    pose_path = []
-//    # remove start node and convert to poses
-//    for (x, y) in path[1:]:
-//        pose_path.append(position.Pose(x, y))
-//    self.send_to_simulator(pose_path)
-//    return cost, pose_path
-//
-//
-//def evaluate(self, start, end):
-//    # When evaluating a path we consider far opponents
-//    for zone in [ self.main_opponent_zone, self.secondary_opponent_zone, self.teammate_zone ]:
-//        if zone.is_detected and not zone.is_enabled:
-//            self.pathfinder.enable_zone(zone.id, True)
-//    cost = self.route(start, end)[0]
-//    for zone in [ self.main_opponent_zone, self.secondary_opponent_zone, self.teammate_zone ]:
-//        if zone.is_detected and not zone.is_enabled:
-//            self.pathfinder.enable_zone(zone.id, False)
     return this;
 }
 
