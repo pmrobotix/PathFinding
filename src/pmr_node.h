@@ -34,7 +34,7 @@ Node* node_new(float x, float y);
 void node_free(Node* self);
 
 
-void node_create_edges_array(Node* self, int size);
+void node_create_edges_array(Node* self, unsigned int size);
 
 
 void node_add_edge(Node* self, Edge* edge);
