@@ -14,8 +14,6 @@
 #include "pmr_zone.h"
 #include "pmr_path_result.h"
 
-/* Pathfinder methods ********************************************************/
-
 struct PathFinder
 {
     float field_x1;
@@ -31,6 +29,7 @@ struct PathFinder
     std::vector<Edge*> edges;
 };
 
+/* Pathfinder methods ********************************************************/
 
 int pathfinder_init(PathFinder* self, float field_x1, float field_y1, float field_x2, float field_y2,
         float zone_escape_increment, float zone_escape_max_increment);

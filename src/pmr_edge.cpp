@@ -1,7 +1,7 @@
 #include <cstddef>
 #include "pmr_edge.h"
 #include "pmr_tools.h"
-#include <math.h>
+#include <cmath>
 /* Edge **********************************************************************/
 
 
@@ -61,7 +61,7 @@ void edge_update(Edge* self)
 int edge_contains(Edge* self, float x, float y)
 {
     int ok = 0;
-    if (!isfinite(self->a)) {
+    if (!std::isfinite(self->a)) {
         /* Vertical edge */
         ok = tools_quasi_equal(x, self->node1->x) &&
              tools_is_between(self->node1->y, self->node2->y, y);
@@ -95,16 +95,16 @@ int edge_intersects(Edge* self, Edge* other)
         node_coords_equal(self->node2, other->node2)) {
         return 0;
     }
-    if (!isfinite(self->a) && !isfinite(other->a)) {
+    if (!std::isfinite(self->a) && !std::isfinite(other->a)) {
         /* Two vertical lines */
         return tools_quasi_equal(self->node1->x, other->node1->x) &&
                 (edge_contains(self, other->node1->x, other->node1->y) ||
                  edge_contains(self, other->node2->x, other->node2->y));
     }
-    if (!isfinite(self->a)) {
+    if (!std::isfinite(self->a)) {
         cross_x = self->node1->x;
         cross_y = other->a * cross_x + other->b;
-    } else if (!isfinite(other->a)) {
+    } else if (!std::isfinite(other->a)) {
         cross_x = other->node1->x;
         cross_y = self->a * cross_x + self->b;
     } else if (!tools_quasi_equal(self->a, other->a)) {

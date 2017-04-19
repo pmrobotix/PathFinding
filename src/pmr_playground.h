@@ -50,7 +50,7 @@ public:
     virtual Playground* enable(PlaygroundObjectID id, bool is_enabled);
     virtual Playground* detect(PlaygroundObjectID id, bool is_detected);
     virtual Playground* compute_edges();
-    virtual Playground* find_path(FoundPath * & path, const Point& start, const Point& end);
+    virtual Playground* find_path(FoundPath * & path, Point& start, Point& end);
 };
 
 #endif /* PMR_PLAYGROUND_H_ */

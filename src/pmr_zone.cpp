@@ -7,6 +7,7 @@
 /* Zone **********************************************************************/
 
 #include <cstddef>
+#include "pmr_tools.h"
 #include "pmr_zone.h"
 
 
@@ -31,6 +32,8 @@ Zone* zone_new(int id, std::vector<Point>& points_list)
     self->enabled = 1;
     self->dx = 0.0;
     self->dy = 0.0;
+    self->is_detected = true;
+    self->is_enabled = true;
 
     for (it = points_list.begin(); it < points_list.end(); it++) {
         self->nodes[self->nodes_count++] = node_new(it->x, it->y);
@@ -117,6 +120,9 @@ int zone_contains_node(Zone* self, Node* node)
         dx2 = node->x - node1->x;
         dy2 = node->y - node1->y;
         cross_product = dx1 * dy2 - dy1 * dx2;
+        if ( tools_quasi_equal(0.0, cross_product) ) {
+            return 0;
+        }
         k = cross_product >= 0.0 ? 1 : -1;
         if (sign == 0) {
             sign = k;

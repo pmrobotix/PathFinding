@@ -3,6 +3,7 @@
 #include <exception>
 
 #include "pmr_path_result.h"
+#include "pmr_pathfinding.h"
 #include "pmr_zone.h"
 #include "pmr_tools.h"
 
@@ -13,7 +14,9 @@ class RuntimeErrorZoneSetupAlreadyFinished: public std::exception
     virtual const char* what() const throw() {
         return "Setup already finished. Adding new zones is forbidden";
     }
-} zoneSetupFinished;
+};
+
+RuntimeErrorZoneSetupAlreadyFinished zoneSetupFinished;
 
 
 /*****************************************************************************/
@@ -22,22 +25,6 @@ class RuntimeErrorZoneSetupAlreadyFinished: public std::exception
 
 
 /* Pathfinder methods ********************************************************/
-
-typedef struct _PathFinder
-{
-    float field_x1;
-    float field_y1;
-    float field_x2;
-    float field_y2;
-    int is_field_config_done;
-    int is_synchronized;
-    float zone_escape_increment;
-    float zone_escape_max_increment;
-    std::vector<Node*> nodes;
-    std::vector<Zone*> zones;
-    std::vector<Edge*> edges;
-} PathFinder;
-
 
 int pathfinder_init(PathFinder* self, float field_x1, float field_y1, float field_x2, float field_y2,
         float zone_escape_increment, float zone_escape_max_increment)

@@ -5,11 +5,13 @@
  *      Author: gmo
  */
 
-#include <math.h>
+
 #include "../src/pmr_tools.h"
 #include "../src/pmr_playground.h"
 #include "../src/pmr_edge.h"
 #include "../src/pmr_zone.h"
+#include "../src/pmr_pathfinding.h"
+#include <cmath>
 #include "gtest/gtest.h"
 
 namespace {
@@ -156,6 +158,10 @@ protected:
     Point p4 = Point();
     Edge * e1;
     Edge * e2;
+    Node * n1;
+    Node * n2;
+    Node * n3;
+    Node * n4;
 
   ZoneTest() {
       p1.x = -1.0;
@@ -175,6 +181,10 @@ protected:
       e2 = edge_new(z1->nodes[0], z1->nodes[2]);
       edge_update(e1);
       edge_update(e2);
+      n1 = node_new(-0.5, 1.0);
+      n2 = node_new( 0.0, 0.0);
+      n3 = node_new( 2.0, 0.0);
+      n4 = node_new(-1.0, 0.5);
   }
 
   virtual ~ZoneTest() {
@@ -182,6 +192,10 @@ protected:
     node_free(z1->nodes[1]);
     node_free(z1->nodes[2]);
     node_free(z1->nodes[3]);
+    node_free(n1);
+    node_free(n2);
+    node_free(n3);
+    node_free(n4);
     zone_free(z1);
     edge_free(e1);
     edge_free(e2);
@@ -201,6 +215,39 @@ protected:
   }
 
   // Objects declared here can be used by all tests in the test case.
+};
+
+class PlaygroundTest : public ::testing::Test {
+protected:
+    Playground * p;
+
+PlaygroundTest() {
+    p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
+    p->add_circle(p->this_robot, 400.0, 525.0, 180.0, 8)
+            ->add_circle(p->teammate, 400.0, 1575.0, 180.0, 8)
+            ->add_circle(p->opponent_1, 2600.0, 525.0, 180.0, 8)
+            ->add_circle(p->opponent_2, 2600.0, 1575.0, 180.0, 8)
+            ->add_rectangle(1500.0, 1050.0, 50.0, 50.0, 0);
+}
+
+virtual ~PlaygroundTest() {
+    delete p;
+}
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
 };
 
 
@@ -440,6 +487,53 @@ TEST_F(ZoneTest, CheckZoneIsInternal) {
     EXPECT_NE(0, result);
 }
 
+TEST_F(ZoneTest, CheckZoneContainsNode) {
+    int result;
+
+    result = zone_contains_node(z1, z1->nodes[3]);
+    EXPECT_EQ(0, result); // nodes of the border are not contained in the zone
+    result = zone_contains_node(z1, n1);
+    EXPECT_EQ(0, result); // nodes of the border are not contained in the zone
+    result = zone_contains_node(z1, n2);
+    EXPECT_NE(0, result); // (0, 0) is in the zone
+    result = zone_contains_node(z1, n3);
+    EXPECT_EQ(0, result); // (2, 0) is not in the zone
+    result = zone_contains_node(z1, n4);
+    EXPECT_EQ(0, result); // nodes of the border are not contained in the zone
+
+}
+
+TEST_F(ZoneTest, CheckZoneCenter) {
+    float x;
+    float y;
+
+    zone_get_center(z1, &x, &y);
+    EXPECT_NE(0, tools_quasi_equal(0.0, x));
+    EXPECT_NE(0, tools_quasi_equal(0.0, y));
+}
+
+TEST_F(ZoneTest, CheckZoneVisibility) {
+    EXPECT_EQ(true, zone_is_enabled(z1));
+    EXPECT_EQ(true, zone_is_detected(z1));
+    zone_set_is_detected(z1, false);
+    zone_set_is_enabled(z1, false);
+    EXPECT_EQ(false, zone_is_enabled(z1));
+    EXPECT_EQ(false, zone_is_detected(z1));
+}
+
+TEST_F(PlaygroundTest, CheckPlayground) {
+    FoundPath * path;
+    std::vector<Point> * my_points;
+    std::vector<Point> * opponent_points;
+
+    p->compute_edges();
+    p->get_shape(my_points, p->this_robot);
+    p->get_shape(opponent_points, p->opponent_2);
+    p->find_path(path, (*my_points)[0], (*opponent_points)[7]);
+    delete my_points;
+    delete opponent_points;
+    delete path;
+}
 
 }  // namespace
 

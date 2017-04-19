@@ -244,7 +244,7 @@ void Playground::PlaygroundImpl::enable(PlaygroundObjectID teammate, PlaygroundO
 }
 
 
-Playground* Playground::find_path(FoundPath * & path, const Point& start, const Point& end)
+Playground* Playground::find_path(FoundPath * & path, Point& start, Point& end)
 {
     playground_impl->enable(teammate, opponent_1, opponent_2, 1);
     path = pathfinder_find_path(playground_impl->my_playground, start.x, start.y, end.x, end.y);
