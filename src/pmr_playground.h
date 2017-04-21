@@ -51,6 +51,11 @@ public:
     virtual Playground* detect(PlaygroundObjectID id, bool is_detected);
     virtual Playground* compute_edges();
     virtual Playground* find_path(FoundPath * & path, Point& start, Point& end);
+
+    virtual unsigned int get_nodes_count();
+    virtual unsigned int get_nodes_count(PlaygroundObjectID id);
+    virtual unsigned int get_edges_count();
+    virtual unsigned int get_zones_count();
 };
 
 #endif /* PMR_PLAYGROUND_H_ */

@@ -28,7 +28,7 @@ struct Zone
 };
 
 
-Zone* zone_new(int id, std::vector<Point>& points_list);
+Zone* zone_new(unsigned int id, std::vector<Point>& points_list);
 
 
 void zone_free(Zone* self);

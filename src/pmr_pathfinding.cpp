@@ -81,7 +81,7 @@ unsigned int pathfinder_add_zone(PathFinder* self, std::vector<Point>& points_li
         throw zoneSetupFinished;
     }
 
-    Zone* zone = zone_new((int)(self->zones.size()), points_list);
+    Zone* zone = zone_new((unsigned int)(self->zones.size()), points_list);
     float x, y;
     zone_get_center(zone, &x, &y);
     self->zones.push_back(zone);
@@ -172,11 +172,11 @@ std::vector<Point> * pathfinder_get_zone(PathFinder* self, unsigned int zone_id)
         Zone* zone = self->zones[zone_id];
         unsigned int size = zone->nodes_count;
         std::vector<Point> * result = new std::vector<Point>(size);
-        for (unsigned int i; i < size; i++) {
+        for (unsigned int i = 0; i < size; i++) {
             Point p;
             p.x = zone->nodes[i]->x;
             p.y = zone->nodes[i]->y;
-            result->push_back(p);
+            (*result)[i] = p;
         }
         return result;
     }

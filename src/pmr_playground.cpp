@@ -44,7 +44,7 @@ Playground* Playground::add_circle(PlaygroundObjectID& id, float x, float y, flo
         Point p;
         p.x = x + radius * cos(angle);
         p.y = y + radius * sin(angle);
-        points_list.push_back(p);
+        points_list[i] = p;
     }
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
     return this;
@@ -66,7 +66,7 @@ Playground* Playground::add_quarter_circle(PlaygroundObjectID& id, float x, floa
         Point p;
         p.x = x + radius * cos(angle);
         p.y = y + radius * sin(angle);
-        points_list.push_back(p);
+        points_list[i] = p;
         angle += angle_increment;
     }
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
@@ -89,7 +89,7 @@ Playground* Playground::add_half_circle(PlaygroundObjectID& id, float x, float y
         Point p;
         p.x = x + radius * cos(angle);
         p.y = y + radius * sin(angle);
-        points_list.push_back(p);
+        points_list[i] = p;
         angle += angle_increment;
     }
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
@@ -114,7 +114,7 @@ Playground* Playground::add_segment(PlaygroundObjectID& id, float x1, float y1, 
         Point p;
         p.x = x1 + radius * cos(angle);
         p.y = y1 + radius * sin(angle);
-        points_list.push_back(p);
+        points_list[i] = p;
         angle += angle_increment;
     }
     angle = atan2(y2-y1, x2-x1) - 0.5 * playground_impl->PI;
@@ -143,20 +143,21 @@ Playground* Playground::add_rectangle(PlaygroundObjectID& id, float x, float y, 
     float height_2 = dy / 2.0;
     float cos_a = cos(angle);
     float sin_a = sin(angle);
+    unsigned int i = 0;
     std::vector<Point> points_list = std::vector<Point>(4);
     Point p;
     p.x = x - width_2 * sin_a + height_2 * cos_a;
     p.y = y + width_2 * cos_a + height_2 * sin_a;
-    points_list.push_back(p);
+    points_list[i++] = p;
     p.x = x + width_2 * sin_a + height_2 * cos_a;
     p.y = y - width_2 * cos_a + height_2 * sin_a;
-    points_list.push_back(p);
+    points_list[i++] = p;
     p.x = x + width_2 * sin_a - height_2 * cos_a;
     p.y = y - width_2 * cos_a - height_2 * sin_a;
-    points_list.push_back(p);
+    points_list[i++] = p;
     p.x = x - width_2 * sin_a - height_2 * cos_a;
     p.y = y + width_2 * cos_a - height_2 * sin_a;
-    points_list.push_back(p);
+    points_list[i++] = p;
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
     return this;
 }
@@ -174,6 +175,7 @@ Playground* Playground::add_convex_body(PlaygroundObjectID& id, float x, float y
 
     float cos_a = cos(angle);
     float sin_a = sin(angle);
+    unsigned int i = 0;
     std::vector<Point> points_list = std::vector<Point>(relative_points.size());
     Point p;
     std::vector<Point*>::const_iterator points_it;
@@ -181,7 +183,7 @@ Playground* Playground::add_convex_body(PlaygroundObjectID& id, float x, float y
         const Point * relative_point = *points_it;
         p.x = x + relative_point->x * cos_a - relative_point->y * sin_a;
         p.y = y + relative_point->x * sin_a + relative_point->y * cos_a;
-        points_list.push_back(p);
+        points_list[i++] = p;
     }
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
     return this;
@@ -261,5 +263,23 @@ Playground* Playground::find_path(FoundPath * & path, Point& start, Point& end)
     return this;
 }
 
+unsigned int Playground::get_nodes_count()
+{
+    return playground_impl->my_playground->nodes.size();
+}
+
+unsigned int Playground::get_nodes_count(PlaygroundObjectID id)
+{
+    return playground_impl->my_playground->zones[id]->nodes_count;
+}
+
+unsigned int Playground::get_edges_count()
+{
+    return playground_impl->my_playground->edges.size();
+}
 
 
+unsigned int Playground::get_zones_count()
+{
+    return playground_impl->my_playground->zones.size();
+}

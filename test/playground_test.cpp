@@ -250,6 +250,34 @@ virtual void TearDown() {
 // Objects declared here can be used by all tests in the test case.
 };
 
+class PlaygroundSizeTest : public ::testing::Test {
+protected:
+    Playground * p;
+
+PlaygroundSizeTest() {
+    p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
+}
+
+virtual ~PlaygroundSizeTest() {
+    delete p;
+}
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
 
 TEST_F(NodeTest, CheckCreation) {
     EXPECT_EQ(n1->f_score, n1->x);
@@ -527,6 +555,16 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     std::vector<Point> * opponent_points;
 
     p->compute_edges();
+    // Initial position
+    p->get_shape(my_points, p->this_robot);
+    p->get_shape(opponent_points, p->opponent_2);
+    p->find_path(path, (*my_points)[0], (*opponent_points)[7]);
+    delete my_points;
+    delete opponent_points;
+    delete path;
+    // Move the robots and compute again the path
+    p->move(p->this_robot, 100.0, 0.0);
+    p->move(p->opponent_2, 0.0, -100.0);
     p->get_shape(my_points, p->this_robot);
     p->get_shape(opponent_points, p->opponent_2);
     p->find_path(path, (*my_points)[0], (*opponent_points)[7]);
@@ -534,6 +572,40 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     delete opponent_points;
     delete path;
 }
+
+TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
+    EXPECT_EQ(2, p->get_nodes_count());
+    EXPECT_EQ(0, p->get_edges_count());
+    EXPECT_EQ(0, p->get_zones_count());
+    p->add_circle(p->this_robot, 400.0, 525.0, 180.0, 8);
+    EXPECT_EQ(10, p->get_nodes_count());
+    EXPECT_EQ(0, p->get_edges_count());
+    EXPECT_EQ(1, p->get_zones_count());
+    EXPECT_EQ(8, p->get_nodes_count(p->this_robot));
+    p->add_circle(p->teammate, 400.0, 1575.0, 180.0, 8);
+    EXPECT_EQ(18, p->get_nodes_count());
+    EXPECT_EQ(0, p->get_edges_count());
+    EXPECT_EQ(2, p->get_zones_count());
+    EXPECT_EQ(8, p->get_nodes_count(p->teammate));
+    p->add_circle(p->opponent_1, 2600.0, 525.0, 180.0, 8);
+    EXPECT_EQ(26, p->get_nodes_count());
+    EXPECT_EQ(0, p->get_edges_count());
+    EXPECT_EQ(3, p->get_zones_count());
+    EXPECT_EQ(8, p->get_nodes_count(p->opponent_1));
+    p->add_circle(p->opponent_2, 2600.0, 1575.0, 180.0, 8);
+    EXPECT_EQ(34, p->get_nodes_count());
+    EXPECT_EQ(0, p->get_edges_count());
+    EXPECT_EQ(4, p->get_zones_count());
+    EXPECT_EQ(8, p->get_nodes_count(p->opponent_2));
+    p->add_rectangle(1500.0, 1050.0, 50.0, 50.0, 0);
+    EXPECT_EQ(38, p->get_nodes_count());
+    EXPECT_EQ(0, p->get_edges_count());
+    EXPECT_EQ(5, p->get_zones_count());
+    p->compute_edges();
+    EXPECT_EQ(38, p->get_nodes_count());
+    EXPECT_EQ(38*37/2, p->get_edges_count());
+}
+
 
 }  // namespace
 

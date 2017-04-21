@@ -20,7 +20,7 @@ class RuntimeErrorBadCountInZoneUpdate: public std::exception
 } badCount;
 
 
-Zone* zone_new(int id, std::vector<Point>& points_list)
+Zone* zone_new(unsigned int id, std::vector<Point>& points_list)
 {
     std::vector<Point>::iterator it;
     Zone* self = new Zone;
