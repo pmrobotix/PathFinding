@@ -10,7 +10,9 @@ Once a world (playground) has been described in terms of nodes, all the edges be
 
 This project is still work in progress. The low-level API has been taken from the [BHTeam](https://bitbucket.org/bhteam/bhware-open/overview) and should be stable.  The high level API will certainly change over time.
 
-The unit tests are still missing.
+The unit tests use the Google Testing Framework.
+
+These tests also use https://github.com/adishavit/simple-svg.git. Clone that repository if you want to compile the tests.
 
 The project compiles, but most probably it has a lot of issues.
 

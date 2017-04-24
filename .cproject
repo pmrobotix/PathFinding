@@ -19,7 +19,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.lib.debug.913241334" name="Debug" parent="cdt.managedbuild.config.gnu.lib.debug" postannouncebuildStep="Build test program" postbuildStep="g++ -o ${ProjName}  -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -L ${CWD}  test/playground_test.o -l pmr-pathfinding -l gtest -l gtest_main -l pthread">
+				<configuration artifactExtension="a" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.staticLib" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.staticLib,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.lib.debug.913241334" name="Debug" parent="cdt.managedbuild.config.gnu.lib.debug" postannouncebuildStep="Build test program" postbuildStep="g++ -o ${ProjName}  -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -L ${CWD}  -L ${CWD}/../simple-svg test/playground_test.o -l pmr-pathfinding -l gtest -l gtest_main -l pthread">
 					<folderInfo id="cdt.managedbuild.config.gnu.lib.debug.913241334." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.lib.debug.1768246343" name="Linux GCC" superClass="cdt.managedbuild.toolchain.gnu.lib.debug">
 							<targetPlatform id="cdt.managedbuild.target.gnu.platform.lib.debug.1706145955" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.lib.debug"/>
@@ -44,6 +44,14 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="cdt.managedbuild.config.gnu.lib.debug.913241334.643471770" name="playground_test.cpp" rcbsApplicability="disable" resourcePath="test/playground_test.cpp" toolsToInvoke="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.1737398438.66756102">
+						<tool id="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.1737398438.66756102" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.lib.debug.1737398438">
+							<option id="gnu.cpp.compiler.option.include.paths.1884981874" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+								<listOptionValue builtIn="false" value="&quot;${workspace_loc:/simple-svg}&quot;"/>
+							</option>
+							<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.388606000" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
+						</tool>
+					</fileInfo>
 					<sourceEntries>
 						<entry excluding="test|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>

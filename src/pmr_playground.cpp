@@ -146,17 +146,17 @@ Playground* Playground::add_rectangle(PlaygroundObjectID& id, float x, float y, 
     unsigned int i = 0;
     std::vector<Point> points_list = std::vector<Point>(4);
     Point p;
-    p.x = x - width_2 * sin_a + height_2 * cos_a;
-    p.y = y + width_2 * cos_a + height_2 * sin_a;
+    p.x = x - height_2 * sin_a + width_2 * cos_a;
+    p.y = y + height_2 * cos_a + width_2 * sin_a;
     points_list[i++] = p;
-    p.x = x + width_2 * sin_a + height_2 * cos_a;
-    p.y = y - width_2 * cos_a + height_2 * sin_a;
+    p.x = x + height_2 * sin_a + width_2 * cos_a;
+    p.y = y - height_2 * cos_a + width_2 * sin_a;
     points_list[i++] = p;
-    p.x = x + width_2 * sin_a - height_2 * cos_a;
-    p.y = y - width_2 * cos_a - height_2 * sin_a;
+    p.x = x + height_2 * sin_a - width_2 * cos_a;
+    p.y = y - height_2 * cos_a - width_2 * sin_a;
     points_list[i++] = p;
-    p.x = x - width_2 * sin_a - height_2 * cos_a;
-    p.y = y + width_2 * cos_a - height_2 * sin_a;
+    p.x = x - height_2 * sin_a - width_2 * cos_a;
+    p.y = y + height_2 * cos_a - width_2 * sin_a;
     points_list[i++] = p;
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
     return this;
@@ -282,4 +282,8 @@ unsigned int Playground::get_edges_count()
 unsigned int Playground::get_zones_count()
 {
     return playground_impl->my_playground->zones.size();
+}
+
+PathFinder* Playground::get_path_finder() {
+    return playground_impl->my_playground;
 }

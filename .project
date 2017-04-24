@@ -3,6 +3,7 @@
 	<name>pmr-pathfinding</name>
 	<comment></comment>
 	<projects>
+		<project>simple-svg</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

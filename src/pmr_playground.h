@@ -13,6 +13,7 @@
 #include <vector>
 #include "pmr_point.h"
 #include "pmr_path_result.h"
+#include "pmr_pathfinding.h"
 
 typedef unsigned int PlaygroundObjectID;
 
@@ -56,6 +57,8 @@ public:
     virtual unsigned int get_nodes_count(PlaygroundObjectID id);
     virtual unsigned int get_edges_count();
     virtual unsigned int get_zones_count();
+
+    virtual PathFinder* get_path_finder();
 };
 
 #endif /* PMR_PLAYGROUND_H_ */
