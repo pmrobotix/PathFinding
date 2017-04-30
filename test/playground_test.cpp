@@ -78,6 +78,8 @@ protected:
     Node * n10;
     Node * n11;
     Node * n12;
+    Node * n13;
+    Node * n14;
     Edge * e1;
     Edge * e2;
     Edge * e3;
@@ -86,6 +88,7 @@ protected:
     Edge * e6;
     Edge * e7;
     Edge * e8;
+    Edge * e9;
 
   EdgeTest() {
     n1 = node_new(-1.0, 0.0);
@@ -100,6 +103,8 @@ protected:
     n10 = node_new(1.0, -1.0);
     n11 = node_new(10.0, 10.0);
     n12 = node_new(12.0, 12.0);
+    n13 = node_new(10.001, 9.99);
+    n14 = node_new(12.0, 12.0);
     e1 = edge_new(n1, n2);
     e2 = edge_new(n3, n4);
     e3 = edge_new(n5, n6);
@@ -108,6 +113,7 @@ protected:
     e6 = edge_new(n10, n6);
     e7 = edge_new(n1, n4);
     e8 = edge_new(n11, n12);
+    e9 = edge_new(n13, n14);
   }
 
   virtual ~EdgeTest() {
@@ -228,10 +234,10 @@ public:
         std::vector<Node*>::iterator nodes_it;
         unsigned int i;
         svg::Dimensions dimensions(pf->field_x2+10.0, pf->field_y2+10);
-        svg::Document doc(file_name, svg::Layout(dimensions, svg::Layout::BottomLeft));
+        svg::Document doc(file_name, svg::Layout(dimensions, svg::Layout::TopLeft));
 
         // Red image border.
-        svg::Polygon border(svg::Stroke(1, svg::Color::Red));
+        svg::Polygon border(svg::Fill(svg::Color::White), svg::Stroke(5, svg::Color::Red));
         border << svg::Point(pf->field_x1, pf->field_y1) << svg::Point(dimensions.width, pf->field_y1)
             << svg::Point(dimensions.width, dimensions.height) << svg::Point(pf->field_x1, dimensions.height);
         doc << border;
@@ -240,7 +246,7 @@ public:
         for (zones_it = pf->zones.begin(); zones_it < pf->zones.end(); zones_it++) {
             Zone* zone = *zones_it;
             if (zone->nodes_count > 0) {
-                svg::Polygon zone_poly(svg::Fill(svg::Color::Blue), svg::Stroke(0, svg::Color::Blue));
+                svg::Polygon zone_poly(svg::Fill(svg::Color::Aqua), svg::Stroke(0, svg::Color::Aqua));
                 for (i = 0; i < zone->nodes_count; i++) {
                     Node* node = zone->nodes[i];
                     zone_poly << svg::Point(node->x, node->y);
@@ -255,7 +261,7 @@ public:
             if (edge->enabled) {
                 svg::Point p1(edge->node1->x, edge->node1->y);
                 svg::Point p2(edge->node2->x, edge->node2->y);
-                svg::Line line(p1, p2, svg::Stroke(1, svg::Color::Silver));
+                svg::Line line(p1, p2, svg::Stroke(1, svg::Color::Black));
                 doc << line;
             }
         }
@@ -263,7 +269,7 @@ public:
         // Display found path
         if (found_path != NULL) {
             bool node_found = false;
-            svg::Polyline path_polyline(svg::Stroke(3, svg::Color::Black));
+            svg::Polyline path_polyline(svg::Stroke(5, svg::Color::Green));
 
             for (nodes_it = found_path->path.begin(); nodes_it < found_path->path.end(); nodes_it++) {
                 Node* node = *nodes_it;
@@ -280,6 +286,36 @@ public:
     }
     virtual ~SVGTest() {
     }
+};
+
+class SimplePlaygroundTest : public ::testing::Test, public SVGTest {
+protected:
+    Playground * p;
+
+SimplePlaygroundTest() {
+    p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
+    p->add_circle(p->this_robot, 400.0, 525.0, 180.0, 3)
+            ->add_rectangle(1050.0, 1300.0, 1200.0, 30.0, -3.1415926/4.0);
+}
+
+virtual ~SimplePlaygroundTest() {
+    delete p;
+}
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
 };
 
 class PlaygroundTest : public ::testing::Test, public SVGTest {
@@ -507,7 +543,7 @@ TEST_F(EdgeTest, CheckIntersection) {
     result = edge_intersects(e3, e3);
     EXPECT_EQ(0, result);
     result = edge_intersects(e3, e4);
-    EXPECT_EQ(0, result); // segments with equal coordinates
+    EXPECT_EQ(1, result); // segments with equal coordinates
     result = edge_intersects(e6, e5);
     EXPECT_EQ(0, result); // segments with common endpoint
     result = edge_intersects(e1, e5);
@@ -516,6 +552,9 @@ TEST_F(EdgeTest, CheckIntersection) {
     EXPECT_EQ(0, result); // parallel vertical
     result = edge_intersects(e4, e8);
     EXPECT_EQ(0, result); // on same straight line
+    result = edge_intersects(e8, e9);
+    EXPECT_EQ(1, result); // segments with quasi equal coordinates
+
 }
 
 TEST_F(ZoneTest, CheckZoneSize) {
@@ -614,6 +653,32 @@ TEST_F(ZoneTest, CheckZoneVisibility) {
     EXPECT_EQ(false, zone_is_detected(z1));
 }
 
+TEST_F(SimplePlaygroundTest, CheckPlaygroundEdges) {
+    FoundPath * path = NULL;
+    std::vector<Point> * my_points;
+    Point p_end;
+
+    p->compute_edges();
+    toSVG(p, path, "simpletest0.svg");
+    // Initial position
+    p->get_shape(my_points, p->this_robot);
+    p_end.x = 615.129;
+    p_end.y = 1713.66;
+    p->find_path(path, (*my_points)[0], p_end);
+    toSVG(p, path, "simpletest1.svg");
+    delete my_points;
+    delete path;
+    // Move the robots and compute again the path
+    p->move(p->this_robot, 200.0, 0.0)->synchronize();
+    p->get_shape(my_points, p->this_robot);
+    p_end.x = 1484.87;
+    p_end.y = 886.343;
+    p->find_path(path, (*my_points)[0], p_end);
+    toSVG(p, path, "simpletest2.svg");
+    delete my_points;
+    delete path;
+}
+
 TEST_F(PlaygroundTest, CheckPlayground) {
     FoundPath * path = NULL;
     std::vector<Point> * my_points;
@@ -624,21 +689,24 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     // Initial position
     p->get_shape(my_points, p->this_robot);
     p->get_shape(opponent_points, p->opponent_2);
-    //p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
+    p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
     toSVG(p, path, "test1.svg");
     delete my_points;
     delete opponent_points;
-    //delete path;
+    delete path;
     // Move the robots and compute again the path
     p->move(p->this_robot, 100.0, 0.0);
-    p->move(p->opponent_2, 0.0, -100.0);
+    p->move(p->opponent_2, 0.0, -100.0)->synchronize();
     p->get_shape(my_points, p->this_robot);
     p->get_shape(opponent_points, p->opponent_2);
     p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
     toSVG(p, path, "test2.svg");
+    delete path;
+    p->find_path(path, (*my_points)[4], (*opponent_points)[3]);
+    toSVG(p, path, "test3.svg");
     delete my_points;
     delete opponent_points;
-    //delete path;
+    delete path;
 }
 
 TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
@@ -672,7 +740,7 @@ TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
     p->compute_edges();
     EXPECT_EQ(38, p->get_nodes_count());
     EXPECT_EQ(38*37/2, p->get_edges_count());
-    toSVG(p, NULL, "test3.svg");
+    toSVG(p, NULL, "sizetest1.svg");
 }
 
 

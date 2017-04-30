@@ -51,6 +51,7 @@ public:
     virtual Playground* enable(PlaygroundObjectID id, bool is_enabled);
     virtual Playground* detect(PlaygroundObjectID id, bool is_detected);
     virtual Playground* compute_edges();
+    virtual Playground* synchronize();
     virtual Playground* find_path(FoundPath * & path, Point& start, Point& end);
 
     virtual unsigned int get_nodes_count();

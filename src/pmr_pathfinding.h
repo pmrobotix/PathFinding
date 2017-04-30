@@ -24,6 +24,8 @@ struct PathFinder
     int is_synchronized;
     float zone_escape_increment;
     float zone_escape_max_increment;
+    Node* start_node;
+    Node* end_node;
     std::vector<Node*> nodes;
     std::vector<Zone*> zones;
     std::vector<Edge*> edges;
@@ -75,6 +77,9 @@ float pathfinder_effective_cost(PathFinder* self, Edge* edge);
 
 
 float pathfinder_heuristic_cost_estimate(PathFinder* self, Node* neighbor);
+
+
+void pathfinder_synchronize(PathFinder* self);
 
 
 FoundPath* pathfinder_find_path(PathFinder* self, float x1, float y1, float x2, float y2);

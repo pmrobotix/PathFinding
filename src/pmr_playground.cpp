@@ -225,9 +225,17 @@ Playground* Playground::detect(PlaygroundObjectID id, bool is_detected)
     return this;
 }
 
+
 Playground* Playground::compute_edges()
 {
     pathfinder_field_config_done(playground_impl->my_playground);
+    return this;
+}
+
+
+Playground* Playground::synchronize()
+{
+    pathfinder_synchronize(playground_impl->my_playground);
     return this;
 }
 
@@ -251,15 +259,6 @@ Playground* Playground::find_path(FoundPath * & path, Point& start, Point& end)
     playground_impl->enable(teammate, opponent_1, opponent_2, 1);
     path = pathfinder_find_path(playground_impl->my_playground, start.x, start.y, end.x, end.y);
     playground_impl->enable(teammate, opponent_1, opponent_2, 0);
-//    logger.log("Compute route from ({}, {}) to ({}, {})".format(start.x, start.y, end.x, end.y))
-//    start_date = datetime.datetime.now()
-//    (cost, path) = self.pathfinder.find_path(start.x, start.y, end.x, end.y)
-//    delta = datetime.datetime.now() - start_date
-//    if len(path) == 0:
-//        logger.log("No route found. Cost: {}. computation time: {}".format(cost, delta.total_seconds()))
-//        return None, []
-//    else:
-//        logger.log("Route computed. Cost: {}. computation time: {}".format(cost, delta.total_seconds()))
     return this;
 }
 
