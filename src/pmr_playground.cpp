@@ -25,6 +25,7 @@ Playground::Playground(float field_x1, float field_y1, float field_x2, float fie
 
 Playground::~Playground() {
     pathfinder_dealloc(playground_impl->my_playground);
+    delete playground_impl->my_playground;
 }
 
 

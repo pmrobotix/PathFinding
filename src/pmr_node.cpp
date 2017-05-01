@@ -32,7 +32,7 @@ Node* node_new(float x, float y)
 void node_free(Node* self)
 {
     if (self->edges != NULL) {
-        delete self->edges;
+        delete[] self->edges;
     }
     delete self;
 }

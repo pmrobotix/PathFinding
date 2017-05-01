@@ -2,6 +2,7 @@
 #include "pmr_edge.h"
 #include "pmr_tools.h"
 #include <cmath>
+#include <algorithm>
 #include "pmr_debug_logging.h"
 /* Edge **********************************************************************/
 
@@ -12,8 +13,6 @@ Edge* edge_new(Node* node1, Node* node2)
 
     self->node1 = node1;
     self->node2 = node2;
-    self->a = INFINITY;
-    self->b = INFINITY;
     self->enabled = 1;
     self->length = 0.0;
     self->zone_internal = 0;
@@ -46,40 +45,8 @@ Node* edge_other_node(Edge* self, Node* node)
 
 void edge_update(Edge* self)
 {
-    if (tools_quasi_equal(self->node1->x, self->node2->x)) {
-        /* Vertical edge */
-        self->a = INFINITY;
-        self->b = INFINITY;
-    } else {
-        /* General case */
-        self->a = (self->node2->y - self->node1->y) / (self->node2->x - self->node1->x);
-        self->b = self->node1->y - self->a * self->node1->x;
-    }
     self->length = tools_distance(self->node1->x, self->node1->y, self->node2->x, self->node2->y);
-    PMR_DBG("Node 1: " << self->node1->x << ", " << self->node1->y << " Node 2: " << self->node2->x << ", " << self->node2->y << " a: " << self->a << " b: " << self->b << " length: " << self->length);
-}
-
-
-int edge_contains(Edge* self, float x, float y)
-{
-    int ok = 0;
-    if (!std::isfinite(self->a)) {
-        /* Vertical edge */
-        ok = tools_quasi_equal(x, self->node1->x) &&
-             tools_is_between(self->node1->y, self->node2->y, y);
-    } else if (tools_quasi_equal(self->a, 0.0)) {
-        /* Horizontal edge */
-        ok = tools_quasi_equal(self->b, y) &&
-            tools_is_between(self->node1->x, self->node2->x, x);
-    } else {
-        /* General case */
-        /* Check that the point is on the line */
-        ok = tools_quasi_equal(self->a * x + self->b, y);
-        /* Check that the point is in the segment bounds */
-        ok &= tools_is_between(self->node1->x, self->node2->x, x);
-        ok &= tools_is_between(self->node1->y, self->node2->y, y);
-    }
-    return ok;
+    PMR_DBG("Node 1: " << self->node1->x << ", " << self->node1->y << " Node 2: " << self->node2->x << ", " << self->node2->y << " length: " << self->length);
 }
 
 

@@ -45,8 +45,8 @@ Zone* zone_new(unsigned int id, std::vector<Point>& points_list)
 
 void zone_free(Zone* self)
 {
-    delete self->edges;
-    delete self->nodes;
+    delete[] self->edges;
+    delete[] self->nodes;
     delete self;
 }
 

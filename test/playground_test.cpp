@@ -117,26 +117,29 @@ protected:
   }
 
   virtual ~EdgeTest() {
-    node_free(n1);
-    node_free(n2);
-    node_free(n3);
-    node_free(n4);
-    node_free(n5);
-    node_free(n6);
-    node_free(n7);
-    node_free(n8);
-    node_free(n9);
-    node_free(n10);
-    node_free(n11);
-    node_free(n12);
-    edge_free(e1);
-    edge_free(e2);
-    edge_free(e3);
-    edge_free(e4);
-    edge_free(e5);
-    edge_free(e6);
-    edge_free(e7);
-    edge_free(e8);
+      edge_free(e1);
+      edge_free(e2);
+      edge_free(e3);
+      edge_free(e4);
+      edge_free(e5);
+      edge_free(e6);
+      edge_free(e7);
+      edge_free(e8);
+      edge_free(e9);
+      node_free(n1);
+      node_free(n2);
+      node_free(n3);
+      node_free(n4);
+      node_free(n5);
+      node_free(n6);
+      node_free(n7);
+      node_free(n8);
+      node_free(n9);
+      node_free(n10);
+      node_free(n11);
+      node_free(n12);
+      node_free(n13);
+      node_free(n14);
   }
 
   // If the constructor and destructor are not enough for setting up
@@ -291,10 +294,11 @@ public:
 class SimplePlaygroundTest : public ::testing::Test, public SVGTest {
 protected:
     Playground * p;
+    PlaygroundObjectID me = Playground::INVALID;
 
 SimplePlaygroundTest() {
     p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
-    p->add_circle(p->this_robot, 400.0, 525.0, 180.0, 3)
+    p->add_circle(me, 400.0, 525.0, 180.0, 3)
             ->add_rectangle(1050.0, 1300.0, 1200.0, 30.0, -3.1415926/4.0);
 }
 
@@ -321,10 +325,11 @@ virtual void TearDown() {
 class PlaygroundTest : public ::testing::Test, public SVGTest {
 protected:
     Playground * p;
+    PlaygroundObjectID me = Playground::INVALID;
 
 PlaygroundTest() {
     p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
-    p->add_circle(p->this_robot, 400.0, 525.0, 180.0, 8)
+    p->add_circle(me, 400.0, 525.0, 180.0, 8)
             ->add_circle(p->teammate, 400.0, 1575.0, 180.0, 8)
             ->add_circle(p->opponent_1, 2600.0, 525.0, 180.0, 8)
             ->add_circle(p->opponent_2, 2600.0, 1575.0, 180.0, 8)
@@ -354,6 +359,7 @@ virtual void TearDown() {
 class PlaygroundSizeTest : public ::testing::Test, public SVGTest {
 protected:
     Playground * p;
+    PlaygroundObjectID me = Playground::INVALID;
 
 PlaygroundSizeTest() {
     p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
@@ -488,38 +494,12 @@ TEST_F(EdgeTest, CheckUpdate) {
     edge_update(e2);
     edge_update(e3);
     edge_update(e7);
-    EXPECT_EQ(0.0, e1->a);
-    EXPECT_EQ(0.0, e1->b);
     EXPECT_EQ(2.0, e1->length);
-    EXPECT_EQ(INFINITY, e2->a);
-    EXPECT_EQ(INFINITY, e2->b);
     EXPECT_EQ(2.0, e2->length);
-    EXPECT_EQ(1.0, e3->a);
-    EXPECT_EQ(0.0, e3->b);
     EXPECT_NE(0, tools_quasi_equal(2.0*sqrt(2.0), e3->length));
     EXPECT_NE(0, tools_quasi_equal(sqrt(2.0), e7->length));
 }
 
-TEST_F(EdgeTest, CheckContains) {
-    int result;
-    edge_update(e1);
-    edge_update(e2);
-    edge_update(e3);
-    result = edge_contains(e1, 0.0, 0.0);
-    EXPECT_NE(0, result);
-    result = edge_contains(e2, 0.0, 0.0);
-    EXPECT_NE(0, result);
-    result = edge_contains(e3, 0.0, 0.0);
-    EXPECT_NE(0, result);
-    result = edge_contains(e3, 1.0, 1.0);
-    EXPECT_NE(0, result);
-    result = edge_contains(e1, 0.0, 1.0);
-    EXPECT_EQ(0, result);
-    result = edge_contains(e2, 1.0, 0.0);
-    EXPECT_EQ(0, result);
-    result = edge_contains(e3, 0.0, 1.0);
-    EXPECT_EQ(0, result);
-}
 
 TEST_F(EdgeTest, CheckIntersection) {
     int result;
@@ -661,7 +641,7 @@ TEST_F(SimplePlaygroundTest, CheckPlaygroundEdges) {
     p->compute_edges();
     toSVG(p, path, "simpletest0.svg");
     // Initial position
-    p->get_shape(my_points, p->this_robot);
+    p->get_shape(my_points, me);
     p_end.x = 615.129;
     p_end.y = 1713.66;
     p->find_path(path, (*my_points)[0], p_end);
@@ -669,8 +649,8 @@ TEST_F(SimplePlaygroundTest, CheckPlaygroundEdges) {
     delete my_points;
     delete path;
     // Move the robots and compute again the path
-    p->move(p->this_robot, 200.0, 0.0)->synchronize();
-    p->get_shape(my_points, p->this_robot);
+    p->move(me, 200.0, 0.0)->synchronize();
+    p->get_shape(my_points, me);
     p_end.x = 1484.87;
     p_end.y = 886.343;
     p->find_path(path, (*my_points)[0], p_end);
@@ -687,7 +667,7 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     p->compute_edges();
     toSVG(p, path, "test0.svg");
     // Initial position
-    p->get_shape(my_points, p->this_robot);
+    p->get_shape(my_points, me);
     p->get_shape(opponent_points, p->opponent_2);
     p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
     toSVG(p, path, "test1.svg");
@@ -695,9 +675,9 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     delete opponent_points;
     delete path;
     // Move the robots and compute again the path
-    p->move(p->this_robot, 100.0, 0.0);
+    p->move(me, 100.0, 0.0);
     p->move(p->opponent_2, 0.0, -100.0)->synchronize();
-    p->get_shape(my_points, p->this_robot);
+    p->get_shape(my_points, me);
     p->get_shape(opponent_points, p->opponent_2);
     p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
     toSVG(p, path, "test2.svg");
@@ -713,11 +693,11 @@ TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
     EXPECT_EQ(2, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(0, p->get_zones_count());
-    p->add_circle(p->this_robot, 400.0, 525.0, 180.0, 8);
+    p->add_circle(me, 400.0, 525.0, 180.0, 8);
     EXPECT_EQ(10, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(1, p->get_zones_count());
-    EXPECT_EQ(8, p->get_nodes_count(p->this_robot));
+    EXPECT_EQ(8, p->get_nodes_count(me));
     p->add_circle(p->teammate, 400.0, 1575.0, 180.0, 8);
     EXPECT_EQ(18, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());

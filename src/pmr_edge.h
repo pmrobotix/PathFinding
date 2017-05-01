@@ -16,8 +16,6 @@ struct Edge
 {
     Node* node1;
     Node* node2;
-    float a;
-    float b;
     int enabled;
     float length;
     int zone_internal;
@@ -35,10 +33,8 @@ int edge_links(Edge* self, Node* node1, Node* node2);
 
 Node* edge_other_node(Edge* self, Node* node);
 
+
 void edge_update(Edge* self);
-
-
-int edge_contains(Edge* self, float x, float y);
 
 
 int edge_intersects(Edge* self, Edge* other);

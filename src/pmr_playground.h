@@ -23,7 +23,6 @@ private:
     std::unique_ptr<PlaygroundImpl> playground_impl;
 public:
     static const PlaygroundObjectID INVALID = UINT_MAX;
-    PlaygroundObjectID this_robot = INVALID;
     PlaygroundObjectID teammate = INVALID;
     PlaygroundObjectID opponent_1 = INVALID;
     PlaygroundObjectID opponent_2 = INVALID;
