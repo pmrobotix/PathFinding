@@ -689,6 +689,25 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     delete path;
 }
 
+TEST_F(PlaygroundTest, SampleRobotMove) {
+    FoundPath * path = NULL;
+    Point startPoint = {x : 250.0, y : 300.0 };
+    Point secondPosition = {x : 1700.0, y : 1050.0 };
+    Point finalPosition  = {x : 2880.0, y : 300.0 };
+
+    p->compute_edges();
+    toSVG(p, path, "testRobot0.svg");
+    // First move
+    p->find_path(path, startPoint, secondPosition);
+    toSVG(p, path, "testRobot1.svg");
+    delete path;
+    // Move the robots and compute again the path
+    p->move(p->opponent_2, 0.0, -100.0)->synchronize();
+    p->find_path(path, secondPosition, finalPosition);
+    toSVG(p, path, "testRobot2.svg");
+    delete path;
+}
+
 TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
     EXPECT_EQ(2, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
