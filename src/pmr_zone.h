@@ -21,8 +21,8 @@ struct Zone
     unsigned int nodes_count;
     unsigned int id;
     int enabled;
-    bool is_enabled;
-    bool is_detected;
+    bool is_enabled;//TODO deprecated
+    bool is_detected;//TODO deprecated
     float dx;
     float dy;
 };

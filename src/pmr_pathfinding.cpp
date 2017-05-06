@@ -116,7 +116,7 @@ void pathfinder_enable_zone(PathFinder* self, unsigned int zone_id, int enabled)
 
 }
 
-
+//TODO deprecated
 void pathfinder_set_is_enabled_zone(PathFinder* self, unsigned int zone_id, bool is_enabled)
 {
     if (zone_id >= 0 && zone_id < (self->zones.size())) {
@@ -128,7 +128,7 @@ void pathfinder_set_is_enabled_zone(PathFinder* self, unsigned int zone_id, bool
     }
 }
 
-
+//TODO deprecated
 void pathfinder_set_is_detected_zone(PathFinder* self, unsigned int zone_id, bool is_detected)
 {
     if (zone_id >= 0 && zone_id < (self->zones.size())) {
@@ -141,7 +141,7 @@ void pathfinder_set_is_detected_zone(PathFinder* self, unsigned int zone_id, boo
 
 }
 
-
+//TODO deprecated
 bool pathfinder_is_enabled_zone(PathFinder* self, unsigned int zone_id)
 {
     if (zone_id >= 0 && zone_id < (self->zones.size())) {
@@ -152,7 +152,7 @@ bool pathfinder_is_enabled_zone(PathFinder* self, unsigned int zone_id)
     return false;
 }
 
-
+//TODO deprecated
 bool pathfinder_is_detected_zone(PathFinder* self, unsigned int zone_id)
 {
     if (zone_id >= 0 && zone_id < (self->zones.size())) {
