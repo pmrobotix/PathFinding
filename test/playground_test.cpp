@@ -6,15 +6,23 @@
  */
 
 
-#include "../src/pmr_tools.h"
-#include "../src/pmr_playground.h"
-#include "../src/pmr_edge.h"
-#include "../src/pmr_zone.h"
-#include "../src/pmr_pathfinding.h"
+#include <gtest/gtest.h>
+#include <gtest/internal/gtest-internal.h>
+#include <simple_svg_1.0.0.hpp>
 #include <cmath>
+#include <exception>
+#include <iterator>
 #include <string>
-#include "gtest/gtest.h"
-#include "simple_svg_1.0.0.hpp"
+#include <vector>
+
+#include "../src/pmr_edge.h"
+#include "../src/pmr_node.h"
+#include "../src/pmr_path_result.h"
+#include "../src/pmr_pathfinding.h"
+#include "../src/pmr_playground.h"
+#include "../src/pmr_point.h"
+#include "../src/pmr_tools.h"
+#include "../src/pmr_zone.h"
 
 namespace {
 
@@ -236,8 +244,13 @@ public:
         std::vector<Edge*>::iterator edges_it;
         std::vector<Node*>::iterator nodes_it;
         unsigned int i;
-        svg::Dimensions dimensions(pf->field_x2+10.0, pf->field_y2+10);
-        svg::Document doc(file_name, svg::Layout(dimensions, svg::Layout::TopLeft));
+        svg::Dimensions dimensions(pf->field_x2, pf->field_y2);
+
+        svg::Layout lay(dimensions, svg::Layout::TopLeft);
+
+        svg::Document doc(file_name, lay);
+
+        doc << svg::elemStart("g") << svg::attribute("transform","translate(0,2000) scale(1,-1)") << svg::emptyElemEnd(false) ;
 
         // Red image border.
         svg::Polygon border(svg::Fill(svg::Color::White), svg::Stroke(5, svg::Color::Red));
@@ -253,9 +266,17 @@ public:
                 for (i = 0; i < zone->nodes_count; i++) {
                     Node* node = zone->nodes[i];
                     zone_poly << svg::Point(node->x, node->y);
+
+
                 }
                 doc << zone_poly;
             }
+
+            std::string s = "Zone " + std::to_string(zone_getId(zone)) ; //;
+            float x, y;
+            zone_get_center(zone, &x, &y);
+            std::string t = "translate(0,"+ std::to_string(y*2) +") scale(1,-1)";
+            doc << svg::Text(svg::Point(x, y), s, svg::Color::Black, svg::Font(50, "Verdana"), svg::Stroke(), t);
         }
 
         // Display all enabled edges
@@ -264,7 +285,7 @@ public:
             if (edge->enabled) {
                 svg::Point p1(edge->node1->x, edge->node1->y);
                 svg::Point p2(edge->node2->x, edge->node2->y);
-                svg::Line line(p1, p2, svg::Stroke(1, svg::Color::Black));
+                svg::Line line(p1, p2, svg::Stroke(0.5, svg::Color(238,238,238)));
                 doc << line;
             }
         }
@@ -285,6 +306,8 @@ public:
                 doc << path_polyline;
             }
         }
+
+        doc << svg::elemEnd("g");
         doc.save();
     }
     virtual ~SVGTest() {
@@ -297,8 +320,8 @@ protected:
     PlaygroundObjectID me = Playground::INVALID;
 
 SimplePlaygroundTest() {
-    p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
-    p->add_circle(me, 400.0, 525.0, 180.0, 3)
+   p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
+   p->add_circle(me, 400.0, 525.0, 180.0, 3)
             ->add_rectangle(1050.0, 1300.0, 1200.0, 30.0, -3.1415926/4.0);
 }
 
@@ -326,14 +349,19 @@ class PlaygroundTest : public ::testing::Test, public SVGTest {
 protected:
     Playground * p;
     PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+    PlaygroundObjectID obj = Playground::INVALID;
 
 PlaygroundTest() {
-    p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
-    p->add_circle(me, 400.0, 525.0, 180.0, 8)
-            ->add_circle(p->teammate, 400.0, 1575.0, 180.0, 8)
-            ->add_circle(p->opponent_1, 2600.0, 525.0, 180.0, 8)
-            ->add_circle(p->opponent_2, 2600.0, 1575.0, 180.0, 8)
-            ->add_rectangle(1500.0, 1050.0, 200.0, 400.0, 0);
+    p = new Playground(0.0, 0.0, 3000.0, 2000.0, 5.0, 10.0);
+    p->add_circle(me, 400.0, 525.0, 180.0, 3)
+		->add_rectangle(obj,1500.0, 1050.0, 200.0, 400.0, 0)
+            ->add_circle(teammate, 400.0, 1575.0, 180.0, 8)
+            ->add_circle(opponent_1, 2600.0, 525.0, 180.0, 4)
+            ->add_circle(opponent_2, 2000.0, 1375.0, 250.0, 8);
+
 }
 
 virtual ~PlaygroundTest() {
@@ -664,11 +692,16 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     std::vector<Point> * my_points;
     std::vector<Point> * opponent_points;
 
+    //PlaygroundObjectID opponent_2 = 3;
+    p->enable(opponent_2,0);
+
     p->compute_edges();
     toSVG(p, path, "test0.svg");
     // Initial position
     p->get_shape(my_points, me);
-    p->get_shape(opponent_points, p->opponent_2);
+    p->get_shape(opponent_points, opponent_2);
+
+
     p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
     toSVG(p, path, "test1.svg");
     delete my_points;
@@ -676,9 +709,9 @@ TEST_F(PlaygroundTest, CheckPlayground) {
     delete path;
     // Move the robots and compute again the path
     p->move(me, 100.0, 0.0);
-    p->move(p->opponent_2, 0.0, -100.0)->synchronize();
+    p->move(opponent_2, 0.0, -100.0)->synchronize();
     p->get_shape(my_points, me);
-    p->get_shape(opponent_points, p->opponent_2);
+    p->get_shape(opponent_points, opponent_2);
     p->find_path(path, (*my_points)[6], (*opponent_points)[3]);
     toSVG(p, path, "test2.svg");
     delete path;
@@ -691,9 +724,12 @@ TEST_F(PlaygroundTest, CheckPlayground) {
 
 TEST_F(PlaygroundTest, SampleRobotMove) {
     FoundPath * path = NULL;
+
+    //PlaygroundObjectID opponent_2 = 2;
+
     Point startPoint = {x : 250.0, y : 300.0 };
     Point secondPosition = {x : 1700.0, y : 1050.0 };
-    Point finalPosition  = {x : 2880.0, y : 300.0 };
+    Point finalPosition  = {x : 2800.0, y : 1800.0 };
 
     p->compute_edges();
     toSVG(p, path, "testRobot0.svg");
@@ -701,14 +737,29 @@ TEST_F(PlaygroundTest, SampleRobotMove) {
     p->find_path(path, startPoint, secondPosition);
     toSVG(p, path, "testRobot1.svg");
     delete path;
-    // Move the robots and compute again the path
-    p->move(p->opponent_2, 0.0, -100.0)->synchronize();
-    p->find_path(path, secondPosition, finalPosition);
+    p->find_path(path, startPoint, finalPosition);
     toSVG(p, path, "testRobot2.svg");
     delete path;
+    // Move the robots and compute again the path
+    p->move(obj, 0.0, 300.0)->synchronize();
+    p->find_path(path, startPoint, finalPosition);
+    toSVG(p, path, "testRobot3.svg");
+    delete path;
+
+    p->enable(opponent_2,0);
+    p->enable(obj,0);
+    p->find_path(path, startPoint, finalPosition);
+    toSVG(p, path, "testRobot4.svg");
+    delete path;
+
 }
 
 TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
+
+	PlaygroundObjectID teammate = Playground::INVALID;
+	PlaygroundObjectID opponent_1 = Playground::INVALID;
+	PlaygroundObjectID opponent_2 = Playground::INVALID;
+
     EXPECT_EQ(2, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(0, p->get_zones_count());
@@ -717,21 +768,21 @@ TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(1, p->get_zones_count());
     EXPECT_EQ(8, p->get_nodes_count(me));
-    p->add_circle(p->teammate, 400.0, 1575.0, 180.0, 8);
+    p->add_circle(teammate, 400.0, 1575.0, 180.0, 8);
     EXPECT_EQ(18, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(2, p->get_zones_count());
-    EXPECT_EQ(8, p->get_nodes_count(p->teammate));
-    p->add_circle(p->opponent_1, 2600.0, 525.0, 180.0, 8);
+    EXPECT_EQ(8, p->get_nodes_count(teammate));
+    p->add_circle(opponent_1, 2600.0, 525.0, 180.0, 8);
     EXPECT_EQ(26, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(3, p->get_zones_count());
-    EXPECT_EQ(8, p->get_nodes_count(p->opponent_1));
-    p->add_circle(p->opponent_2, 2600.0, 1575.0, 180.0, 8);
+    EXPECT_EQ(8, p->get_nodes_count(opponent_1));
+    p->add_circle(opponent_2, 2600.0, 1575.0, 180.0, 8);
     EXPECT_EQ(34, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());
     EXPECT_EQ(4, p->get_zones_count());
-    EXPECT_EQ(8, p->get_nodes_count(p->opponent_2));
+    EXPECT_EQ(8, p->get_nodes_count(opponent_2));
     p->add_rectangle(1500.0, 1050.0, 200.0, 400.0, 0);
     EXPECT_EQ(38, p->get_nodes_count());
     EXPECT_EQ(0, p->get_edges_count());

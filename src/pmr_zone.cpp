@@ -173,3 +173,9 @@ void zone_set_is_detected(Zone * self, bool is_detected)
 {
     self->is_detected = is_detected;
 }
+
+unsigned int zone_getId(Zone * self)
+{
+	 return self->id;
+}
+

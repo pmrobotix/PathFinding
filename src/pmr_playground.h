@@ -23,9 +23,7 @@ private:
     std::unique_ptr<PlaygroundImpl> playground_impl;
 public:
     static const PlaygroundObjectID INVALID = UINT_MAX;
-    PlaygroundObjectID teammate = INVALID;
-    PlaygroundObjectID opponent_1 = INVALID;
-    PlaygroundObjectID opponent_2 = INVALID;
+
     Playground(float field_x1, float field_y1, float field_x2, float field_y2,
             float zone_escape_increment, float zone_escape_max_increment);
     virtual ~Playground();

@@ -57,5 +57,6 @@ void zone_set_is_enabled(Zone * self, bool is_enabled);
 
 void zone_set_is_detected(Zone * self, bool is_detected);
 
+unsigned int zone_getId(Zone * self);
 
 #endif /* PMR_ZONE_H_ */

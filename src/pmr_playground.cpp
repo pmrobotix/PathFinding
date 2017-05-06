@@ -13,7 +13,7 @@ class Playground::PlaygroundImpl {
 public:
     static constexpr float PI = 3.1415927;
     PathFinder * my_playground;
-    void enable(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled);
+    void enableAll(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled);
 };
 
 Playground::Playground(float field_x1, float field_y1, float field_x2, float field_y2,
@@ -240,8 +240,7 @@ Playground* Playground::synchronize()
     return this;
 }
 
-
-void Playground::PlaygroundImpl::enable(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled)
+void Playground::PlaygroundImpl::enableAll(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled)
 {
     if (teammate != Playground::INVALID && pathfinder_is_detected_zone(my_playground, teammate) && pathfinder_is_enabled_zone(my_playground, teammate)) {
         pathfinder_enable_zone(my_playground, teammate, enabled);
@@ -257,9 +256,11 @@ void Playground::PlaygroundImpl::enable(PlaygroundObjectID teammate, PlaygroundO
 
 Playground* Playground::find_path(FoundPath * & path, Point& start, Point& end)
 {
-    playground_impl->enable(teammate, opponent_1, opponent_2, 1);
+
+    //playground_impl->enableAll(4, 2, 3, 0);
     path = pathfinder_find_path(playground_impl->my_playground, start.x, start.y, end.x, end.y);
-    playground_impl->enable(teammate, opponent_1, opponent_2, 0);
+   // playground_impl->enableAll(4, 2, 3, 0);
+
     return this;
 }
 
