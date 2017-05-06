@@ -2,3 +2,8 @@ Debug
 Release
 /Library/
 *.svg
+/LibEV3/
+/LibARM/
+/Lib_ARM_OPOS/
+/Lib_EV3/
+/Lib_ARM_9328/

@@ -748,6 +748,8 @@ TEST_F(PlaygroundTest, SampleRobotMove) {
 
     p->enable(opponent_2,0);
     p->enable(obj,0);
+
+
     p->find_path(path, startPoint, finalPosition);
     toSVG(p, path, "testRobot4.svg");
     delete path;

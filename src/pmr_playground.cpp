@@ -215,11 +215,12 @@ Playground* Playground::get_shape(std::vector<Point> * & points, PlaygroundObjec
 
 Playground* Playground::enable(PlaygroundObjectID id, bool is_enabled)
 {
-    pathfinder_set_is_enabled_zone(playground_impl->my_playground, id, is_enabled);
+    //pathfinder_set_is_enabled_zone(playground_impl->my_playground, id, is_enabled);
+    pathfinder_enable_zone(playground_impl->my_playground, id, is_enabled);
     return this;
 }
 
-
+//TODO deprecated
 Playground* Playground::detect(PlaygroundObjectID id, bool is_detected)
 {
     pathfinder_set_is_detected_zone(playground_impl->my_playground, id, is_detected);
@@ -240,6 +241,7 @@ Playground* Playground::synchronize()
     return this;
 }
 
+//TODO deprecated
 void Playground::PlaygroundImpl::enableAll(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled)
 {
     if (teammate != Playground::INVALID && pathfinder_is_detected_zone(my_playground, teammate) && pathfinder_is_enabled_zone(my_playground, teammate)) {
