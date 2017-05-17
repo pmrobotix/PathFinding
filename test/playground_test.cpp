@@ -250,7 +250,7 @@ public:
 
         svg::Document doc(file_name, lay);
 
-        doc << svg::elemStart("g") << svg::attribute("transform","translate(0,2000) scale(1,-1)") << svg::emptyElemEnd(false) ;
+        doc << svg::elemStart("g") << svg::attribute("transform","translate(200,2200) scale(1,-1)") << svg::emptyElemEnd(false) ;
 
         // Red image border.
         svg::Polygon border(svg::Fill(svg::Color::White), svg::Stroke(5, svg::Color::Red));
@@ -355,7 +355,7 @@ protected:
     PlaygroundObjectID obj = Playground::INVALID;
 
 PlaygroundTest() {
-    p = new Playground(0.0, 0.0, 3000.0, 2000.0, 5.0, 10.0);
+    p = new Playground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0);
     p->add_circle(me, 400.0, 525.0, 180.0, 3)
 		->add_rectangle(obj,1500.0, 1050.0, 200.0, 400.0, 0)
             ->add_circle(teammate, 400.0, 1575.0, 180.0, 8)
@@ -748,7 +748,6 @@ TEST_F(PlaygroundTest, SampleRobotMove) {
 
     p->enable(opponent_2,0);
     p->enable(obj,0);
-
 
     p->find_path(path, startPoint, finalPosition);
     toSVG(p, path, "testRobot4.svg");

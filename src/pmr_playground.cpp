@@ -213,10 +213,10 @@ Playground* Playground::get_shape(std::vector<Point> * & points, PlaygroundObjec
 }
 
 
-Playground* Playground::enable(PlaygroundObjectID id, bool is_enabled)
+Playground* Playground::enable(PlaygroundObjectID id, bool enable)
 {
     //pathfinder_set_is_enabled_zone(playground_impl->my_playground, id, is_enabled);
-    pathfinder_enable_zone(playground_impl->my_playground, id, is_enabled);
+    pathfinder_enable_zone(playground_impl->my_playground, id, enable);
     return this;
 }
 
