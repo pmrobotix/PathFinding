@@ -384,6 +384,83 @@ virtual void TearDown() {
 // Objects declared here can be used by all tests in the test case.
 };
 
+
+
+class PlaygroundTestImpossiblePlaces : public ::testing::Test, public SVGTest {
+protected:
+    Playground * p;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+    PlaygroundObjectID oarea_cube1;
+    PlaygroundObjectID oarea_cube2high;
+    PlaygroundObjectID oarea_cube3left = Playground::INVALID;
+    PlaygroundObjectID oarea_distribadverse;
+    PlaygroundObjectID garea_cube1;
+    PlaygroundObjectID garea_cube2high = Playground::INVALID;
+    PlaygroundObjectID garea_cube3left = Playground::INVALID;
+    PlaygroundObjectID garea_distribadverse;
+    PlaygroundObjectID area_stations;
+
+    PlaygroundTestImpossiblePlaces() {
+    p = new Playground(0.0, 0.0, 3400.0, 2500.0, 0.5, 1.0);
+
+    /*p->add_circle(me, 400.0, 525.0, 180.0, 3)
+                    ->add_rectangle(obj,1500.0, 1050.0, 200.0, 400.0, 0)
+            ->add_circle(teammate, 400.0, 1575.0, 180.0, 8)
+            ->add_circle(opponent_1, 2600.0, 525.0, 180.0, 4)
+            ->add_circle(opponent_2, 2000.0, 1375.0, 250.0, 8);
+            */
+            //bordure terrain
+       p->add_rectangle(1500, 0, 3000, 140, 0); //bottom
+       p->add_rectangle(1500, 2000, 3000, 140, 0); //top
+       p->add_rectangle(0, 1000, 140, 2000, 0); //left
+       p->add_rectangle(3000, 1000, 140, 2000, 0); //right
+
+       //orange parts
+       //cubes
+       p->add_circle(oarea_cube1, 850.0, 530.0, 300.0, 6);
+       p->add_circle(oarea_cube2high, 1100.0, 1500.0, 300.0, 6);
+       p->add_circle(oarea_cube3left, 300.0, 1200.0, 300.0, 6);
+
+       //distributeurs
+       p->add_rectangle(oarea_distribadverse, 600, 1900, 200.0, 200.0, 0);
+
+       //Green parts
+       //cubes
+       p->add_circle(garea_cube1, 2150.0, 530.0, 300.0, 6);
+       p->add_circle(garea_cube2high, 1900.0, 1500.0, 300.0, 6);
+       p->add_circle(garea_cube3left, 2700.0, 1200.0, 300.0, 6);
+
+       //distributeurs
+       p->add_rectangle(garea_distribadverse, 2400, 1900, 200.0, 200.0, 0);
+
+       //stations d'épuration
+       p->add_rectangle(area_stations, 1500.0, 1850.0, 1400.0, 300.0, 0);
+       p->add_circle(opponent_1, 1200.0, 1200.0, 600.0, 10);
+
+
+}
+
+virtual ~PlaygroundTestImpossiblePlaces() {
+    delete p;
+}
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
 class PlaygroundSizeTest : public ::testing::Test, public SVGTest {
 protected:
     Playground * p;
@@ -753,6 +830,38 @@ TEST_F(PlaygroundTest, SampleRobotMove) {
     toSVG(p, path, "testRobot4.svg");
     delete path;
 
+}
+
+
+TEST_F(PlaygroundTestImpossiblePlaces, SampleRobotMoveImpossiblePlace) {
+    FoundPath * path = NULL;
+
+    Point startPoint = {x : 250.0, y : 300.0 };
+    Point secondPosition = {x : 1650.0, y : 1650.0 };
+    //Point secondPosition = {x : 2000.0, y : 1150.0 };
+
+    Point finalPosition  = {x : 200.0, y : 1600.0 };
+
+    p->enable(opponent_1,1);
+    p->enable(garea_cube2high,1);
+
+    p->compute_edges();
+
+
+    toSVG(p, path, "testImpossible0.svg");
+    // First move
+    p->find_path(path, startPoint, secondPosition);
+    toSVG(p, path, "testImpossible1.svg");
+    delete path;
+    /*
+    p->find_path(path, secondPosition, finalPosition);
+    toSVG(p, path, "testImpossible2.svg");
+    delete path;
+
+    p->find_path(path, startPoint, finalPosition);
+    toSVG(p, path, "testImpossible3.svg");
+    delete path;
+*/
 }
 
 TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
