@@ -840,7 +840,7 @@ TEST_F(PlaygroundTestImpossiblePlaces, SampleRobotMoveImpossiblePlace) {
     Point secondPosition = {x : 1650.0, y : 1650.0 };
     //Point secondPosition = {x : 2000.0, y : 1150.0 };
 
-    Point finalPosition  = {x : 200.0, y : 1600.0 };
+    //Point finalPosition  = {x : 200.0, y : 1600.0 };
 
     p->enable(opponent_1,1);
     p->enable(garea_cube2high,1);
@@ -852,6 +852,10 @@ TEST_F(PlaygroundTestImpossiblePlaces, SampleRobotMoveImpossiblePlace) {
     // First move
     p->find_path(path, startPoint, secondPosition);
     toSVG(p, path, "testImpossible1.svg");
+    // No path found, node (0, 0) is returned
+    EXPECT_EQ(1, path->path.size());
+    EXPECT_FLOAT_EQ(0.0, path->path[0]->x);
+    EXPECT_FLOAT_EQ(0.0, path->path[0]->y);
     delete path;
     /*
     p->find_path(path, secondPosition, finalPosition);

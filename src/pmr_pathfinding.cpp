@@ -284,7 +284,8 @@ static void pathfinder_disable_intersecting_edges(PathFinder* self, Edge** edges
                     PMR_DBG("Is it in zone " << zone->id);
                     for (k = 0; k < zone->nodes_count; ++k) {
                         Edge* edge2 = zone->edges[k];
-                        int semi_enabled = (!edge2->zone_internal) && (edge2->node1->enabled || edge2->node2->enabled);
+                        int semi_enabled = true || ( (!edge2->zone_internal) && ( edge2->node1->enabled || edge2->node2->enabled ) );
+                        PMR_DBG("Checking edge " << k << " with Node 1:"  <<edge2->node1->x << ", " << edge2->node1->y << " Node 2: " << edge2->node2->x << ", " << edge2->node2->y << ", is semi-enabled=" << semi_enabled);
                         if (edge1 != edge2 && semi_enabled && edge_intersects(edge1, edge2)) {
                             edge1->enabled = 0;
                             PMR_DBG("---> disabled");
