@@ -21,12 +21,6 @@ public:
     inline float relativeSymmetryAngle(float angle, float innerAngle) {
         return M_PI-innerAngle-angle;
     }
-    inline float triangleDeltaX(float x, float angle, float hypotenuse) {
-        return x+hypotenuse*cos(angle);
-    }
-    inline float triangleDeltaY(float y, float angle, float hypotenuse) {
-            return y+hypotenuse*sin(angle);
-        }
     void compute_sym_convex_body(float x, float y,
         const std::vector<Point*>& relative_points, float angle,
         Point absolute_points[]) {
