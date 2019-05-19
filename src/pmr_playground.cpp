@@ -11,7 +11,6 @@
 
 class Playground::PlaygroundImpl {
 public:
-    static constexpr float PI = 3.1415927;
     PathFinder * my_playground;
     void enableAll(PlaygroundObjectID teammate, PlaygroundObjectID opponent_1, PlaygroundObjectID opponent_2, int enabled);
 };
@@ -23,7 +22,8 @@ Playground::Playground(float field_x1, float field_y1, float field_x2, float fie
     pathfinder_init(playground_impl->my_playground, field_x1, field_y1, field_x2, field_y2, zone_escape_increment, zone_escape_max_increment);
 }
 
-Playground::~Playground() {
+Playground::~Playground()
+{
     pathfinder_dealloc(playground_impl->my_playground);
     delete playground_impl->my_playground;
 }
@@ -39,7 +39,7 @@ Playground* Playground::add_circle(float x, float y, float radius, unsigned int 
 Playground* Playground::add_circle(PlaygroundObjectID& id, float x, float y, float radius, unsigned int num_segments)
 {
     std::vector<Point> points_list = std::vector<Point>(num_segments);
-    const float angle_increment = 2.0 * playground_impl->PI / ((float) num_segments);
+    const float angle_increment = 2.0f * M_PI / ((float) num_segments);
     for (unsigned int i = 0; i<num_segments; i++) {
         float angle = ((float) i) * angle_increment;
         Point p;
@@ -61,13 +61,17 @@ Playground* Playground::add_quarter_circle(float x, float y, float radius, float
 
 Playground* Playground::add_quarter_circle(PlaygroundObjectID& id, float x, float y, float radius, float angle, unsigned int num_segments)
 {
-    std::vector<Point> points_list = std::vector<Point>(num_segments);
-    const float angle_increment = 0.5 * playground_impl->PI / (((float) num_segments)-1);
+    std::vector<Point> points_list = std::vector<Point>(num_segments+1);
+    const float angle_increment = 0.5f * M_PI / (((float) num_segments)-1);
+    Point p;
+
+    p.x = x;
+    p.y = y;
+    points_list[0] = p;
     for (unsigned int i = 0; i<num_segments; i++) {
-        Point p;
         p.x = x + radius * cos(angle);
         p.y = y + radius * sin(angle);
-        points_list[i] = p;
+        points_list[i+1] = p;
         angle += angle_increment;
     }
     id = pathfinder_add_zone(playground_impl->my_playground, points_list);
@@ -85,7 +89,7 @@ Playground* Playground::add_half_circle(float x, float y, float radius, float an
 Playground* Playground::add_half_circle(PlaygroundObjectID& id, float x, float y, float radius, float angle, unsigned int num_segments)
 {
     std::vector<Point> points_list = std::vector<Point>(num_segments);
-    const float angle_increment = 1.0 * playground_impl->PI / (((float) num_segments)-1);
+    const float angle_increment = 1.0f * M_PI / (((float) num_segments)-1);
     for (unsigned int i = 0; i<num_segments; i++) {
         Point p;
         p.x = x + radius * cos(angle);
@@ -109,8 +113,8 @@ Playground* Playground::add_segment(PlaygroundObjectID& id, float x1, float y1, 
 {
     unsigned int num_segments = 4;
     std::vector<Point> points_list = std::vector<Point>(num_segments);
-    float angle = atan2(y2-y1, x2-x1) + 0.5 * playground_impl->PI;
-    const float angle_increment = playground_impl->PI / (((float) num_segments)-1);
+    float angle = atan2(y2-y1, x2-x1) + 0.5f * M_PI;
+    const float angle_increment = M_PI / (((float) num_segments)-1);
     for (unsigned int i = 0; i<num_segments; i++) {
         Point p;
         p.x = x1 + radius * cos(angle);
@@ -118,7 +122,7 @@ Playground* Playground::add_segment(PlaygroundObjectID& id, float x1, float y1, 
         points_list[i] = p;
         angle += angle_increment;
     }
-    angle = atan2(y2-y1, x2-x1) - 0.5 * playground_impl->PI;
+    angle = atan2(y2-y1, x2-x1) - 0.5f * M_PI;
     for (unsigned int i = 0; i<num_segments; i++) {
         Point p;
         p.x = x2 + radius * cos(angle);

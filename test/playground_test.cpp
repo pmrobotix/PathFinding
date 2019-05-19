@@ -19,7 +19,7 @@
 #include "../src/pmr_node.h"
 #include "../src/pmr_path_result.h"
 #include "../src/pmr_pathfinding.h"
-#include "../src/pmr_playground.h"
+#include "../src/pmr_symmetrical_pg.h"
 #include "../src/pmr_point.h"
 #include "../src/pmr_tools.h"
 #include "../src/pmr_zone.h"
@@ -491,6 +491,240 @@ virtual void TearDown() {
 };
 
 
+class SymCircleTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymCircleTest() {
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1500.0);
+    sp->add_circle_symmetrical(me, teammate, 400.0, 525.0, 150.0, 5)
+                    ->add_circle_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 180.0, 8);
+
+}
+
+virtual ~SymCircleTest() {
+    delete sp;
+}
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
+class SymHalfCircleTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymHalfCircleTest() {
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1000.0);
+    sp->add_half_circle_symmetrical(me, teammate, 400.0, 525.0, 150.0, 0.25f*((float)M_PI), 5)
+                    ->add_quarter_circle_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 180.0, 0.25f*((float)M_PI), 8);
+
+}
+
+virtual ~SymHalfCircleTest() {
+    delete sp;
+}
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
+class SymQuarterCircleTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymQuarterCircleTest() {
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1500.0);
+    sp->add_quarter_circle_symmetrical(me, teammate, 400.0, 525.0, 150.0, 0.25f*((float)M_PI), 5)
+                    ->add_quarter_circle_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 180.0, -0.25f*((float)M_PI), 8);
+
+}
+
+virtual ~SymQuarterCircleTest() {
+    delete sp;
+}
+
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
+class SymSegmentTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymSegmentTest() {
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1500.0);
+    sp->add_segment_symmetrical(me, teammate, 400.0, 400.0, 500.0, 500.0, 20)
+                    ->add_segment_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 500.0, 900.0, 20);
+
+}
+
+virtual ~SymSegmentTest() {
+    delete sp;
+}
+
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
+class SymRectangleTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymRectangleTest() {
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1500.0);
+    sp->add_rectangle_symmetrical(me, teammate, 400.0, 400.0, 100.0, 200.0, 0.25f*((float)M_PI))
+                    ->add_rectangle_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 100.0, 200.0, -0.25f*((float)M_PI));
+
+}
+
+virtual ~SymRectangleTest() {
+    delete sp;
+}
+
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
+class SymBodyTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymBodyTest() {
+    std::vector<Point*> relative_point_refs = std::vector<Point*>(3);
+    Point p1;
+    Point p2;
+    Point p3;
+
+    p1.x = 0.0f;
+    p1.y = 0.0f;
+    relative_point_refs[0] = &(p1);
+    p2.x = 200.0f;
+    p2.y = 0.0f;
+    relative_point_refs[1] = &(p2);
+    p3.x = 100.0f;
+    p3.y = 100.0f;
+    relative_point_refs[2] = &(p3);
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1500.0);
+    sp->add_convex_body_symmetrical(me, teammate, 400.0, 400.0, relative_point_refs, 0.25f*((float)M_PI))
+                    ->add_convex_body_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, relative_point_refs, -0.25f*((float)M_PI));
+
+}
+
+virtual ~SymBodyTest() {
+    delete sp;
+}
+
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
 TEST_F(NodeTest, CheckCreation) {
     EXPECT_EQ(n1->f_score, n1->x);
     EXPECT_EQ(n2->f_score, n2->x);
@@ -907,6 +1141,53 @@ TEST_F(PlaygroundSizeTest, CheckPlaygroundSizes) {
     toSVG(p, NULL, "sizetest1.svg");
 }
 
+TEST_F(SymCircleTest, CheckCircle) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symCircle.svg");
+    delete path;
+}
+
+TEST_F(SymHalfCircleTest, CheckHalfCircle) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symHalfCircle.svg");
+    delete path;
+}
+
+TEST_F(SymQuarterCircleTest, CheckQuarterCircle) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symQuarterCircle.svg");
+    delete path;
+}
+
+TEST_F(SymSegmentTest, CheckSegment) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symSegment.svg");
+    delete path;
+}
+
+TEST_F(SymRectangleTest, CheckRectangle) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symRectangle.svg");
+    delete path;
+}
+
+TEST_F(SymBodyTest, CheckconvexBody) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symBody.svg");
+    delete path;
+}
 
 }  // namespace
 

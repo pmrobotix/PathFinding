@@ -32,6 +32,6 @@ sudo cp *.a /usr/lib
 
 These tests also use https://github.com/adishavit/simple-svg.git. Clone that repository if you want to compile the tests.
 
-The project compiles, but most probably it has a lot of issues.
+The project compiles and is usable.
 
 This code is released under the [GNU General Public License version 3](https://www.gnu.org/licenses/licenses.en.html#GPL).
