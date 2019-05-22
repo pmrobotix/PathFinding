@@ -140,6 +140,37 @@ SymmetricalPlayground* SymmetricalPlayground::add_rectangle_symmetrical(
     return this;
 }
 
+SymmetricalPlayground* SymmetricalPlayground::add_rectangle_lower_left_symmetrical(float x, float y, float dx, float dy, float angle)
+{
+    PlaygroundObjectID id = INVALID;
+    PlaygroundObjectID id_sym = INVALID;
+    return add_rectangle_lower_left_symmetrical(id, id_sym, x, y, dx, dy, angle);
+}
+
+SymmetricalPlayground* SymmetricalPlayground::add_rectangle_lower_left_symmetrical(PlaygroundObjectID& id, PlaygroundObjectID& id_sym, float x, float y, float dx, float dy, float angle)
+{
+    int i = 0;
+    Point p1;
+    Point p2;
+    Point p3;
+    Point p4;
+    std::vector<Point *> points_list = std::vector<Point *>(4);
+
+    p1.x = 0.0f;
+    p1.y = 0.0f;
+    points_list[i++] = &p1;
+    p2.x = dx;
+    p2.y = 0.0f;
+    points_list[i++] = &p2;
+    p3.x = dx;
+    p3.y = dy;
+    points_list[i++] = &p3;
+    p4.x = 0.0f;
+    p4.y = dy;
+    points_list[i] = &p4;
+    return add_convex_body_symmetrical(id, id_sym, x, y, points_list, angle);
+}
+
 SymmetricalPlayground* SymmetricalPlayground::add_convex_body_symmetrical(float x, float y,
         const std::vector<Point*>& relative_points, float angle) {
     PlaygroundObjectID id = INVALID;

@@ -320,7 +320,7 @@ protected:
     PlaygroundObjectID me = Playground::INVALID;
 
 SimplePlaygroundTest() {
-   p = new Playground(190.0, 230.0, 3000.0, 2100.0, 0.02, 1.0);
+   p = new Playground(0.0, 0.0, 3000.0, 2100.0, 0.02, 1.0);
    p->add_circle(me, 400.0, 525.0, 180.0, 3)
             ->add_rectangle(1050.0, 1300.0, 1200.0, 30.0, -3.1415926/4.0);
 }
@@ -653,6 +653,43 @@ SymRectangleTest() {
 }
 
 virtual ~SymRectangleTest() {
+    delete sp;
+}
+
+
+// If the constructor and destructor are not enough for setting up
+// and cleaning up each test, you can define the following methods:
+
+virtual void SetUp() {
+  // Code here will be called immediately after the constructor (right
+  // before each test).
+}
+
+virtual void TearDown() {
+  // Code here will be called immediately after each test (right
+  // before the destructor).
+}
+
+// Objects declared here can be used by all tests in the test case.
+};
+
+
+class SymRectangleLowerLeftTest : public ::testing::Test, public SVGTest {
+protected:
+    SymmetricalPlayground * sp;
+    PlaygroundObjectID me = Playground::INVALID;
+    PlaygroundObjectID teammate = Playground::INVALID;
+    PlaygroundObjectID opponent_1 = Playground::INVALID;
+    PlaygroundObjectID opponent_2 = Playground::INVALID;
+
+SymRectangleLowerLeftTest() {
+    sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1500.0);
+    sp->add_rectangle_lower_left_symmetrical(me, teammate, 400.0, 400.0, 100.0, 200.0, 0.25f*((float)M_PI))
+                    ->add_rectangle_lower_left_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 100.0, 200.0, -0.25f*((float)M_PI));
+
+}
+
+virtual ~SymRectangleLowerLeftTest() {
     delete sp;
 }
 
@@ -1178,6 +1215,14 @@ TEST_F(SymRectangleTest, CheckRectangle) {
 
     sp->compute_edges();
     toSVG(sp, path, "symRectangle.svg");
+    delete path;
+}
+
+TEST_F(SymRectangleLowerLeftTest, CheckRectangleLowerLeft) {
+    FoundPath * path = NULL;
+
+    sp->compute_edges();
+    toSVG(sp, path, "symRectangleLowerLeft.svg");
     delete path;
 }
 

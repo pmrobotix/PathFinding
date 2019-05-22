@@ -29,6 +29,8 @@ public:
     virtual SymmetricalPlayground* add_segment_symmetrical(PlaygroundObjectID& id, PlaygroundObjectID& id_sym, float x1, float y1, float x2, float y2, float radius);
     virtual SymmetricalPlayground* add_rectangle_symmetrical(float x, float y, float dx, float dy, float angle);
     virtual SymmetricalPlayground* add_rectangle_symmetrical(PlaygroundObjectID& id, PlaygroundObjectID& id_sym, float x, float y, float dx, float dy, float angle);
+    virtual SymmetricalPlayground* add_rectangle_lower_left_symmetrical(float x, float y, float dx, float dy, float angle);
+    virtual SymmetricalPlayground* add_rectangle_lower_left_symmetrical(PlaygroundObjectID& id, PlaygroundObjectID& id_sym, float x, float y, float dx, float dy, float angle);
     virtual SymmetricalPlayground* add_convex_body_symmetrical(float x, float y, const std::vector<Point*>& relative_points, float angle);
     virtual SymmetricalPlayground* add_convex_body_symmetrical(PlaygroundObjectID& id, PlaygroundObjectID& id_sym, float x, float y, const std::vector<Point*>& relative_points, float angle);
 };

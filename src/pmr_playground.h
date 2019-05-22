@@ -38,6 +38,8 @@ public:
     virtual Playground* add_segment(PlaygroundObjectID& id, float x1, float y1, float x2, float y2, float radius);
     virtual Playground* add_rectangle(float x, float y, float dx, float dy, float angle);
     virtual Playground* add_rectangle(PlaygroundObjectID& id, float x, float y, float dx, float dy, float angle);
+    virtual Playground* add_rectangle_lower_left(float x, float y, float dx, float dy, float angle);
+    virtual Playground* add_rectangle_lower_left(PlaygroundObjectID& id, float x, float y, float dx, float dy, float angle);
     virtual Playground* add_convex_body(float x, float y, const std::vector<Point*>& relative_points, float angle);
     virtual Playground* add_convex_body(PlaygroundObjectID& id, float x, float y, const std::vector<Point*>& relative_points, float angle);
 

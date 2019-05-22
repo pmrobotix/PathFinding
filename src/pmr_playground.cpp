@@ -168,6 +168,38 @@ Playground* Playground::add_rectangle(PlaygroundObjectID& id, float x, float y, 
 }
 
 
+Playground* Playground::add_rectangle_lower_left(float x, float y, float dx, float dy, float angle)
+{
+    PlaygroundObjectID id = INVALID;
+    return add_rectangle_lower_left(id, x, y, dx, dy, angle);
+}
+
+
+Playground* Playground::add_rectangle_lower_left(PlaygroundObjectID& id, float x, float y, float dx, float dy, float angle)
+{
+    int i = 0;
+    Point p1;
+    Point p2;
+    Point p3;
+    Point p4;
+    std::vector<Point *> points_list = std::vector<Point *>(4);
+
+    p1.x = 0.0f;
+    p1.y = 0.0f;
+    points_list[i++] = &p1;
+    p2.x = dx;
+    p2.y = 0.0f;
+    points_list[i++] = &p2;
+    p3.x = dx;
+    p3.y = dy;
+    points_list[i++] = &p3;
+    p4.x = 0.0f;
+    p4.y = dy;
+    points_list[i] = &p4;
+    return add_convex_body(id, x, y, points_list, angle);
+}
+
+
 Playground* Playground::add_convex_body(float x, float y, const std::vector<Point*>& relative_points, float angle)
 {
     PlaygroundObjectID id = INVALID;
