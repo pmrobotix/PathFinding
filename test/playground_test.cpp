@@ -538,7 +538,7 @@ protected:
 SymHalfCircleTest() {
     sp = new SymmetricalPlayground(0.0, 0.0, 3000.0, 2000.0, 0.02, 1.0, 1000.0);
     sp->add_half_circle_symmetrical(me, teammate, 400.0, 525.0, 150.0, 0.25f*((float)M_PI), 5)
-                    ->add_quarter_circle_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 180.0, 0.25f*((float)M_PI), 8);
+                    ->add_half_circle_symmetrical(opponent_1, opponent_2, 400.0, 1000.0, 180.0, 0.25f*((float)M_PI), 8);
 
 }
 
