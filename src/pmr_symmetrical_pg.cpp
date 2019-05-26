@@ -62,8 +62,27 @@ SymmetricalPlayground* SymmetricalPlayground::add_circle_symmetrical(float x, fl
 SymmetricalPlayground* SymmetricalPlayground::add_circle_symmetrical(
         PlaygroundObjectID& id, PlaygroundObjectID& id_sym, float x, float y, float radius,
         unsigned int num_segments) {
+    std::vector<Point> * circle_points;
     add_circle(id, x, y, radius, num_segments);
-    add_circle(id_sym, sym_playground_impl->symmetryX(x), y, radius, num_segments);
+    get_shape(circle_points, id);
+    if (num_segments % 2 == 0) {
+        add_circle(id_sym, sym_playground_impl->symmetryX(x), y, radius, num_segments);
+    }
+    else {
+        std::vector<Point*> absolute_point_refs = std::vector<Point*>(num_segments);
+
+        for (unsigned int i = 0; i<num_segments; i++) {
+            Point * current_point = &((*circle_points)[i]);
+            current_point->x = sym_playground_impl->symmetryX(current_point->x);
+            absolute_point_refs[i] = current_point;
+        }
+        add_convex_body(id_sym,
+                0.0f,
+                0.0f,
+                absolute_point_refs,
+                0.0f);
+    }
+    delete circle_points;
     return this;
 }
 
