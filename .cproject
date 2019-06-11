@@ -517,6 +517,9 @@
 		<configuration configurationName="Release">
 			<resource resourceType="PROJECT" workspacePath="/pmr-pathfinding"/>
 		</configuration>
+		<configuration configurationName="Lib_EV3"/>
+		<configuration configurationName="Lib_ARM_9328"/>
+		<configuration configurationName="Lib_ARM_OPOS"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
