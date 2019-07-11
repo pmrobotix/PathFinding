@@ -43,6 +43,7 @@ public:
     virtual Playground* add_convex_body(float x, float y, const std::vector<Point*>& relative_points, float angle);
     virtual Playground* add_convex_body(PlaygroundObjectID& id, float x, float y, const std::vector<Point*>& relative_points, float angle);
 
+    virtual Playground* movexy(PlaygroundObjectID id, float x, float y);
     virtual Playground* move(PlaygroundObjectID id, float dx, float dy);
     virtual Playground* change_shape(PlaygroundObjectID id, const std::vector<Point>& points);
     virtual Playground* get_shape(std::vector<Point> * & points, PlaygroundObjectID id);

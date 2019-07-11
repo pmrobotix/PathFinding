@@ -226,7 +226,11 @@ Playground* Playground::add_convex_body(PlaygroundObjectID& id, float x, float y
     return this;
 }
 
-
+Playground* Playground::movexy(PlaygroundObjectID id, float x, float y)
+{
+    pathfinder_move_zone(playground_impl->my_playground, id, x, y);
+    return this;
+}
 
 Playground* Playground::move(PlaygroundObjectID id, float dx, float dy)
 {

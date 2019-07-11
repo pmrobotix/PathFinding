@@ -57,7 +57,7 @@ bool pathfinder_is_enabled_zone(PathFinder* self, unsigned int zone_id);
 
 bool pathfinder_is_detected_zone(PathFinder* self, unsigned int zone_id);
 
-
+void pathfinder_movexy_zone(PathFinder* self, unsigned int zone_id, float x, float y);
 void pathfinder_move_zone(PathFinder* self, unsigned int zone_id, float dx, float dy);
 
 

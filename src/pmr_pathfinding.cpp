@@ -163,7 +163,21 @@ bool pathfinder_is_detected_zone(PathFinder* self, unsigned int zone_id)
     return false;
 }
 
+void pathfinder_movexy_zone(PathFinder* self, unsigned int zone_id, float x, float y)
+{
+    self->is_synchronized = 0;
 
+    if (zone_id >= 0 && zone_id < (self->zones.size())) {
+        Zone* zone = self->zones[(size_t) zone_id];
+        zone->dx = x;
+        zone->dy = y;
+        PMR_DBG(zone_id << ": zone moved in " << x << ", " << y);
+    }
+    else {
+        PMR_DBG("ERROR: failure in move zone (not existing) " << zone_id);
+    }
+
+}
 void pathfinder_move_zone(PathFinder* self, unsigned int zone_id, float dx, float dy)
 {
     self->is_synchronized = 0;
