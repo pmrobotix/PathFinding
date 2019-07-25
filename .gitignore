@@ -5,3 +5,5 @@ Release
 /Lib_EV3/
 /Lib_ARM_9328/
 *.svg
+/Lib_ARM_EV3_Linaro/
+/libCMAKE/
