@@ -7,3 +7,4 @@ Release
 *.svg
 /Lib_ARM_EV3_Linaro/
 /libCMAKE/
+/Lib_ARM_EV3_Linaro_gnueabihf/
