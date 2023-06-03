@@ -1,4 +1,4 @@
-# PM_Robotix path finding
+# PM-ROBOTIX pathfinding
 
 This is a very simple C++ path finding library for robots.
 
