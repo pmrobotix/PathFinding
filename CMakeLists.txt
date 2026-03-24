@@ -1,9 +1,17 @@
+cmake_minimum_required(VERSION 3.21)
+project(pmr-pathfinding LANGUAGES CXX)
 
-set(APP_NAME pmr_pathfinding)
-project(${APP_NAME})
-cmake_minimum_required(VERSION 2.8)
+add_library(pmr-pathfinding STATIC
+    src/pmr_edge.cpp
+    src/pmr_node.cpp
+    src/pmr_pathfinding.cpp
+    src/pmr_playground.cpp
+    src/pmr_point.cpp
+    src/pmr_symmetrical_pg.cpp
+    src/pmr_tools.cpp
+    src/pmr_zone.cpp
+)
 
-file(GLOB CPP_FILES src/*.cpp src/*.h)
-add_library(${PROJECT_NAME} STATIC ${CPP_FILES})
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(pmr-pathfinding PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
