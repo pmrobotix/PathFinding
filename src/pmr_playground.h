@@ -50,6 +50,20 @@ public:
 
     virtual Playground* enable(PlaygroundObjectID id, bool is_enabled);
     virtual Playground* detect(PlaygroundObjectID id, bool is_detected);
+    /*!
+     * \brief Marque une zone comme permanente (= fixe du jeu, jamais
+     *        desactivable au match : bordures, grenier, depart adverse).
+     *        Permet a la couche IA de detecter au chargement qu'une cible
+     *        de strategie tombe dans une zone definitivement inatteignable.
+     */
+    virtual Playground* set_permanent(PlaygroundObjectID id, bool is_permanent);
+    /*!
+     * \brief Retourne true si le point (x,y) est a l'interieur d'une zone
+     *        marquee permanente ET enabled. \p outZoneId, si non-null, recoit
+     *        l'id de la zone trouvee. Utilise zone_contains_node (convexe).
+     *        Pour usage par StrategyJsonRunner::validateAgainstPlayground().
+     */
+    virtual bool point_in_permanent_zone(float x, float y, PlaygroundObjectID* outZoneId = nullptr);
     virtual Playground* compute_edges();
     virtual Playground* synchronize();
     virtual Playground* find_path(FoundPath * & path, Point& start, Point& end);

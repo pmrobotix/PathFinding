@@ -23,6 +23,7 @@ struct Zone
     int enabled;
     bool is_enabled;//TODO deprecated
     bool is_detected;//TODO deprecated
+    bool is_permanent;  ///< Zone fixe du jeu (bordures, grenier, depart adverse) — jamais desactivable au match.
     float dx;
     float dy;
 };
@@ -56,6 +57,10 @@ void zone_set_is_enabled(Zone * self, bool is_enabled);
 
 
 void zone_set_is_detected(Zone * self, bool is_detected);
+
+bool zone_is_permanent(Zone * self);
+
+void zone_set_is_permanent(Zone * self, bool is_permanent);
 
 unsigned int zone_getId(Zone * self);
 

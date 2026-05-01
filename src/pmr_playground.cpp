@@ -268,6 +268,33 @@ Playground* Playground::detect(PlaygroundObjectID id, bool is_detected)
 }
 
 
+Playground* Playground::set_permanent(PlaygroundObjectID id, bool is_permanent)
+{
+    PathFinder* pf = playground_impl->my_playground;
+    if (id < pf->zones.size()) {
+        zone_set_is_permanent(pf->zones[(size_t)id], is_permanent);
+    }
+    return this;
+}
+
+
+bool Playground::point_in_permanent_zone(float x, float y, PlaygroundObjectID* outZoneId)
+{
+    PathFinder* pf = playground_impl->my_playground;
+    Node tmp;
+    tmp.x = x;
+    tmp.y = y;
+    for (size_t i = 0; i < pf->zones.size(); i++) {
+        Zone* z = pf->zones[i];
+        if (z->enabled && z->is_permanent && zone_contains_node(z, &tmp)) {
+            if (outZoneId) *outZoneId = (PlaygroundObjectID)i;
+            return true;
+        }
+    }
+    return false;
+}
+
+
 Playground* Playground::compute_edges()
 {
     pathfinder_field_config_done(playground_impl->my_playground);

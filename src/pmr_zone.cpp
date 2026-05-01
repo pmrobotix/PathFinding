@@ -34,6 +34,7 @@ Zone* zone_new(unsigned int id, std::vector<Point>& points_list)
     self->dy = 0.0;
     self->is_detected = true;
     self->is_enabled = true;
+    self->is_permanent = false;
 
     for (it = points_list.begin(); it < points_list.end(); it++) {
         self->nodes[self->nodes_count++] = node_new(it->x, it->y);
@@ -172,6 +173,16 @@ void zone_set_is_enabled(Zone * self, bool is_enabled)
 void zone_set_is_detected(Zone * self, bool is_detected)
 {
     self->is_detected = is_detected;
+}
+
+bool zone_is_permanent(Zone * self)
+{
+    return self->is_permanent;
+}
+
+void zone_set_is_permanent(Zone * self, bool is_permanent)
+{
+    self->is_permanent = is_permanent;
 }
 
 unsigned int zone_getId(Zone * self)
